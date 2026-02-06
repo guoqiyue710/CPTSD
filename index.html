@@ -2,17 +2,19 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>溯源之径 - CPTSD 深度测评</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --color-bg: #fdfcf8;
-            --color-primary: #6b8a8f;
-            --color-text: #2e3436;
-            --color-soft-blue: #c7d4e2;
-            --font-serif: 'Noto Sans SC', sans-serif;
+            --color-bg: #e5e0d8; /* 深亚麻大地色 */
+            --color-card: #fcfaf7; /* 羊皮纸色 */
+            --color-primary: #7b8c85; /* 莫兰迪青石 */
+            --color-accent: #a68d71; /* 暖焦糖 */
+            --color-text: #4a443f; /* 碳棕色 */
+            --color-muted: #968e85; /* 灰褐 */
+            --font-serif: 'Noto Serif SC', serif;
             --font-sans: 'Noto Sans SC', sans-serif;
         }
 
@@ -21,224 +23,278 @@
             background-color: var(--color-bg);
             color: var(--color-text);
             margin: 0;
-            line-height: 1.6;
-            overflow-x: hidden;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* 艺术感动态背景 */
-        .background-elements {
+        /* 氛围背景装饰 */
+        .ambient-glow {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             z-index: -1;
+            background: linear-gradient(135deg, #e5e0d8 0%, #d8d0c5 100%);
             overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, #f3efe6 0%, #eae5da 100%);
         }
 
-        .shape {
+        .blob {
             position: absolute;
-            background: var(--color-soft-blue);
-            filter: blur(100px);
+            filter: blur(80px);
             border-radius: 50%;
-            opacity: 0.5;
-            animation: float 25s infinite alternate ease-in-out;
+            opacity: 0.2;
+            animation: drift 25s infinite alternate ease-in-out;
         }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-            100% { transform: translate(15vw, 10vh) rotate(15deg) scale(1.3); }
+        @keyframes drift {
+            from { transform: translate(-10%, -10%) scale(1); }
+            to { transform: translate(15%, 15%) scale(1.3); }
         }
 
-        /* 标题设计 */
-        .serif-title {
-            font-family: var(--font-sans);
-            letter-spacing: 0.1em;
+        /* 主容器 */
+        .app-wrapper {
+            width: 100%;
+            max-width: 880px;
+            background-color: var(--color-card);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 40px 100px -20px rgba(74, 68, 63, 0.15);
+            position: relative;
         }
 
-        /* 容器悬浮 */
-        .main-card {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 48px;
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.03);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        @media (min-width: 768px) {
+            .app-wrapper {
+                min-height: 720px;
+                height: auto;
+                margin: 2rem;
+                border-radius: 40px;
+                border: 1px solid rgba(255, 255, 255, 0.5);
+            }
         }
 
-        /* 选项交互 */
-        .answer-node {
-            padding: 1.25rem 1.5rem;
+        .serif-text {
+            font-family: var(--font-serif);
+            letter-spacing: 0.05em;
+        }
+
+        /* 选项设计 */
+        .answer-cell {
+            background-color: #ffffff;
+            border: 1px solid #efeae4;
             border-radius: 20px;
-            border: 1px solid rgba(139, 166, 169, 0.1);
-            background: white;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 0.75rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 300;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--color-muted);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .answer-node:hover {
-            border-color: var(--color-primary);
-            background: var(--color-soft-blue);
-            color: #2c3e50;
-            padding-left: 2rem;
+        .answer-cell:active {
+            transform: scale(0.97);
+            background-color: #f8f5f2;
         }
 
-        /* 进度条精细化 */
-        .dot-progress {
+        @media (hover: hover) {
+            .answer-cell:hover {
+                border-color: var(--color-accent);
+                color: var(--color-text);
+                padding-left: 2rem;
+                background-color: #fffaf5;
+            }
+        }
+
+        /* 进度条 */
+        .progress-indicator {
             display: flex;
             gap: 6px;
+            justify-content: center;
         }
+
         .dot {
             width: 4px;
             height: 4px;
+            background-color: #e2ddd6;
             border-radius: 50%;
-            background: #cbd5e1;
-            transition: all 0.5s;
+            transition: all 0.5s ease;
         }
+
         .dot.active {
-            background: var(--color-primary);
-            width: 12px;
+            background-color: var(--color-accent);
+            width: 14px;
             border-radius: 4px;
         }
 
-        /* 报告页 Bento Grid */
-        .bento-card {
-            background: white;
-            border-radius: 24px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .action-item {
-            border-left: 2px solid var(--color-soft-blue);
-            padding-left: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .highlight-text {
-            color: var(--color-primary);
+        /* 按钮 */
+        .btn-main {
+            background-color: var(--color-accent);
+            color: #ffffff;
+            padding: 1rem 3.5rem;
+            border-radius: 100px;
             font-weight: 500;
+            letter-spacing: 0.2em;
+            transition: all 0.3s;
+            box-shadow: 0 10px 25px -5px rgba(166, 141, 113, 0.4);
         }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+            box-shadow: 0 15px 30px -5px rgba(166, 141, 113, 0.5);
+        }
+
+        /* 报告布局 */
+        .report-section {
+            background-color: #ffffff;
+            border: 1px solid #f1eeea;
+            border-radius: 28px;
+            padding: 2rem;
+        }
+
+        .healing-step {
+            border-left: 2px solid var(--color-accent);
+            padding-left: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* 动画过渡 */
+        .page-fade {
+            animation: fadeInPage 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--color-bg); border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-6">
+<body>
 
-    <div class="background-elements">
-        <div class="shape w-[500px] h-[500px] top-[-10%] right-[-5%] bg-[#d5dde6]"></div>
-        <div class="shape w-[400px] h-[400px] bottom-[-10%] left-[-5%] bg-[#e2e8f0]" style="animation-delay: -10s;"></div>
+    <div class="ambient-glow">
+        <div class="blob w-[500px] h-[500px] top-[-10%] right-[-10%] bg-[#d0c5bb]"></div>
+        <div class="blob w-[400px] h-[400px] bottom-[-5%] left-[-5%] bg-[#c7cfc1]"></div>
     </div>
 
-    <div id="app" class="main-card w-full max-w-4xl min-h-[650px] flex flex-col relative overflow-hidden">
+    <div id="app" class="app-wrapper overflow-hidden">
         
         <!-- Start Screen -->
-        <div id="start-screen" class="flex-grow flex flex-col items-center justify-center p-12 text-center transition-all duration-700">
-            <div class="mb-12 opacity-80">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#8ba6a9" stroke-width="0.5"/>
-                    <path d="M12 8V12L14 14" stroke="#8ba6a9" stroke-width="1.5" stroke-linecap="round"/>
+        <div id="start-screen" class="flex-grow flex flex-col items-center justify-center p-10 text-center page-fade">
+            <div class="mb-12">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
             </div>
-            <h1 class="serif-title text-4xl font-light text-slate-800 mb-6">溯源之径</h1>
-            <p class="text-slate-600 font-light max-w-md mx-auto leading-loose text-sm tracking-widest mb-12">
-                这是一次关于自我的温柔观察。<br>
-                愿你在安全与自我慈悲的陪伴下，缓慢靠近那些潜藏的纹理。
+            <h1 class="serif-text text-3xl md:text-4xl font-medium text-slate-800 mb-6 tracking-wider">溯源之径</h1>
+            <p class="text-muted font-light max-w-xs mx-auto leading-loose text-sm tracking-[0.1em] mb-16">
+                潜入记忆的深处。<br>
+                我们将通过 18 段描述，<br>静默观测那些尚未平息的情绪纹理。
             </p>
-            <button onclick="startTest()" class="group relative px-12 py-4 bg-slate-800 text-white rounded-full overflow-hidden transition-all hover:pr-16">
-                <span class="relative z-10 text-sm tracking-widest font-light">开启测评</span>
-                <span class="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all">→</span>
+            <button onclick="showGuide()" class="btn-main uppercase text-xs">
+                开启测评
             </button>
         </div>
 
         <!-- Guide Screen -->
-        <div id="guide-screen" class="hidden flex-grow flex flex-col items-center justify-center p-12 text-center transition-all duration-700">
-            <div class="mb-12 opacity-80">
-                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#8ba6a9" stroke-width="0.5"/>
-                    <path d="M12 8V12L14 14" stroke="#8ba6a9" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
+        <div id="guide-screen" class="hidden flex-grow flex flex-col items-center justify-center p-10 text-center page-fade">
+            <h2 class="serif-text text-2xl mb-8 tracking-wider">测评指引</h2>
+            <div class="text-muted font-light max-w-md mx-auto leading-loose text-sm tracking-wide mb-14 space-y-4">
+                <p>开始前，请轻轻地停留片刻，带着温柔与觉察，回想一段对你影响最深的创伤性经历。接下来的问题邀请你以当下的感受作答，测评约需 5 分钟，请选择安静的空间并照顾好自己的状态，任何时刻感到不适，均可随时暂停或返回。你准备好了吗？</p>
             </div>
-            <h2 class="serif-title text-3xl font-light text-slate-800 mb-6">测评指引</h2>
-            <p class="text-slate-600 font-light max-w-xl mx-auto leading-loose text-sm tracking-widest mb-12">
-                开始前，请轻轻地停留片刻，带着温柔与觉察，回想一段对你影响最深的创伤性经历。接下来的问题邀请你以当下的感受作答，测评约需 5 分钟，请选择安静的空间并照顾好自己的状态，任何时刻感到不适，均可随时暂停或返回。你准备好了吗？
-            </p>
-            <div class="flex items-center justify-center gap-4">
-                <button onclick="goStart()" class="px-8 py-3 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all">
-                    暂时还没准备好
-                </button>
-                <button onclick="startQuiz()" class="px-8 py-3 rounded-full bg-slate-800 text-white hover:bg-slate-700 transition-all">
-                    我准备好了
-                </button>
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <button onclick="goHome()" class="text-[10px] uppercase tracking-widest text-slate-400 hover:text-accent transition-colors">暂时离开</button>
+                <button onclick="startQuiz()" class="btn-main uppercase text-xs">我准备好了</button>
             </div>
         </div>
 
         <!-- Quiz Screen -->
-        <div id="quiz-screen" class="hidden flex-grow flex flex-col p-12">
-            <div class="flex justify-between items-center mb-8">
-                <div id="dot-container" class="dot-progress"></div>
-                <div class="hidden text-[10px] tracking-widest text-slate-400 font-medium uppercase" id="cat-label">PTSD / RE-EXPERIENCING</div>
+        <div id="quiz-screen" class="hidden flex-grow flex flex-col p-8 md:p-14 page-fade">
+            <div class="mb-12">
+                <div id="dot-container" class="progress-indicator"></div>
             </div>
 
-            <div class="flex-grow max-w-2xl">
-                <h2 id="question-text" class="serif-title text-2xl md:text-3xl text-slate-800 font-light leading-snug mb-16">...</h2>
-                <div class="grid grid-cols-1 gap-3" id="options">
-                    <div onclick="handleAnswer(0)" class="answer-node text-sm">完全没有影响</div>
-                    <div onclick="handleAnswer(1)" class="answer-node text-sm">轻微扰动</div>
-                    <div onclick="handleAnswer(2)" class="answer-node text-sm">中度影响</div>
-                    <div onclick="handleAnswer(3)" class="answer-node text-sm">较为严重</div>
-                    <div onclick="handleAnswer(4)" class="answer-node text-sm">极其剧烈</div>
+            <div class="flex-grow flex flex-col justify-center max-w-2xl mx-auto w-full">
+                <div id="question-box" class="min-h-[140px] flex items-center mb-10">
+                    <h2 id="question-text" class="serif-text text-xl md:text-2xl text-slate-800 font-medium leading-relaxed">正在加载内容...</h2>
                 </div>
-                <div id="quiz-nav" class="mt-10 flex justify-center">
-                    <button id="nav-button" class="px-8 py-3 rounded-full border border-slate-300 text-slate-700 hover:bg-slate-50 transition-all hidden"></button>
+                
+                <div class="flex flex-col space-y-2" id="options">
+                    <div onclick="handleAnswer(0)" class="answer-cell text-sm">完全没有</div>
+                    <div onclick="handleAnswer(1)" class="answer-cell text-sm">偶尔</div>
+                    <div onclick="handleAnswer(2)" class="answer-cell text-sm">中等</div>
+                    <div onclick="handleAnswer(3)" class="answer-cell text-sm">经常</div>
+                    <div onclick="handleAnswer(4)" class="answer-cell text-sm">总是这样</div>
+                </div>
+                
+                <div class="mt-12 text-center">
+                    <button id="prev-btn" onclick="goPrev()" class="text-[10px] text-slate-300 uppercase tracking-widest hover:text-accent transition-all hidden">返回上一段描述</button>
                 </div>
             </div>
         </div>
 
         <!-- Result Screen -->
-        <div id="result-screen" class="hidden p-12 overflow-y-auto max-h-[90vh]">
-            <header class="mb-12">
-                <h2 class="serif-title text-3xl text-slate-800 mb-2">深度测评报告</h2>
+        <div id="result-screen" class="hidden p-8 md:p-14 overflow-y-auto max-h-screen page-fade">
+            <header class="mb-16 text-center">
+                <p class="text-[10px] tracking-[0.3em] text-accent uppercase mb-3">Professional Insight</p>
+                <h2 class="serif-text text-3xl text-slate-800">深度测评报告</h2>
+                <div class="w-10 h-px bg-accent/20 mx-auto mt-6"></div>
             </header>
 
-            <div id="result-content" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Bento Content -->
+            <div id="result-content" class="grid grid-cols-1 gap-6">
+                <!-- Data will be injected -->
             </div>
 
-            <div class="mt-20 pt-10 border-t border-slate-100 flex justify-between items-center">
-                <p class="text-[10px] text-slate-400">© 溯源之径 · 尊重每一颗勇敢的灵魂</p>
-                <button onclick="retake()" class="text-xs text-slate-600 hover:text-slate-800 tracking-widest transition-colors uppercase">重新测评</button>
+            <div class="mt-20 py-10 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[10px] text-slate-300 tracking-widest uppercase text-center">© 溯源之径 · 尊重每一颗勇敢的灵魂</p>
+                <button onclick="location.reload()" class="text-[10px] text-accent font-semibold uppercase tracking-widest border-b border-accent/20 pb-1">重新测评</button>
             </div>
         </div>
     </div>
 
     <script>
         const questions = [
-            { text: "在清醒时，关于过去创伤经历的痛苦记忆是否反复出现？", cat: "核心症状：再体验" },
-            { text: "在睡眠中，是否会有关于创伤经历的噩梦？", cat: "核心症状：再体验" },
-            { text: "是否会刻意回避让你想起创伤的想法或感受？", cat: "核心症状：回避" },
-            { text: "是否会回避勾起创伤记忆的人、地点或活动？", cat: "核心症状：回避" },
-            { text: "是否感到总是处于警觉状态，感觉危险随时可能发生？", cat: "核心症状：高度警觉" },
-            { text: "是否容易受惊或被轻微的响动吓到？", cat: "核心症状：高度警觉" },
+            { text: "在清醒时，关于过去创伤经历的痛苦记忆会反复出现", cat: "再体验" },
+            { text: "在睡眠中，会有关于创伤经历的噩梦", cat: "再体验" },
+            { text: "会刻意回避让你想起创伤的想法或感受", cat: "回避" },
+            { text: "会回避勾起创伤记忆的人、地点或活动", cat: "回避" },
+            { text: "感到总是处于警觉状态，感觉危险随时可能发生", cat: "高度警觉" },
+            { text: "容易受惊或被轻微的响动吓到", cat: "高度警觉" },
             
-            { text: "情绪激动时，是否需要很长时间才能冷静下来？", cat: "自我组织：情绪调节" },
-            { text: "是否经常感到内心麻木，无法感受到快乐或其他强烈情感？", cat: "自我组织：情绪调节" },
-            { text: "是否感到自己一无是处、像个失败者？", cat: "自我组织：自我概念" },
-            { text: "是否经常对自己感到羞愧、内疚或彻底的失败？", cat: "自我组织：自我概念" },
-            { text: "是否感到很难与他人保持亲密或建立深厚的关系？", cat: "自我组织：人际关系" },
-            { text: "是否倾向于在情感上避开他人，或尽量不参与社交？", cat: "自我组织：人际关系" },
+            { text: "情绪激动时，需要很长时间才能冷静下来", cat: "情绪调节" },
+            { text: "经常感到内心麻木，无法感受到快乐或其他强烈情感", cat: "情绪调节" },
+            { text: "感到自己一无是处、像个失败者", cat: "自我概念" },
+            { text: "经常对自己感到羞愧、内疚或彻底的失败", cat: "自我概念" },
+            { text: "感到很难与他人保持亲密或建立深厚的关系", cat: "人际关系" },
+            { text: "倾向于在情感上避开他人，或尽量不参与社交", cat: "人际关系" },
             
-            { text: "上述记忆和警觉症状是否严重影响了你的社交生活？", cat: "功能受损评估" },
-            { text: "上述记忆和警觉症状是否严重影响了你的工作或学习？", cat: "功能受损评估" },
-            { text: "上述记忆和警觉症状是否影响了你的家庭生活？", cat: "功能受损评估" },
-            { text: "上述情绪和人际困扰是否严重影响了你的社交生活？", cat: "功能受损评估" },
-            { text: "上述情绪和人际困扰是否严重影响了你的工作或学习？", cat: "功能受损评估" },
-            { text: "上述情绪和人际困扰是否影响了你的家庭生活？", cat: "功能受损评估" }
+            { text: "上述记忆和警觉症状是否严重影响了你的社交生活？", cat: "功能受损" },
+            { text: "上述记忆和警觉症状是否严重影响了你的工作或学习？", cat: "功能受损" },
+            { text: "上述记忆和警觉症状是否影响了你的家庭生活？", cat: "功能受损" },
+            { text: "上述情绪和人际困扰是否严重影响了你的社交生活？", cat: "功能受损" },
+            { text: "上述情绪和人际困扰是否严重影响了你的工作或学习？", cat: "功能受损" },
+            { text: "上述情绪和人际困扰是否影响了你的家庭生活？", cat: "功能受损" }
         ];
 
         let currentQuestion = 0;
         let answers = [];
+
+        function showGuide() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('guide-screen').classList.remove('hidden');
+        }
+
+        function goHome() {
+            document.getElementById('guide-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
 
         function initDots() {
             const container = document.getElementById('dot-container');
@@ -250,38 +306,23 @@
             });
         }
 
-        function startTest() {
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('guide-screen').classList.remove('hidden');
-        }
-
-        function goStart() {
-            document.getElementById('guide-screen').classList.add('hidden');
-            document.getElementById('start-screen').classList.remove('hidden');
-            currentQuestion = 0;
-            answers = [];
-        }
-
         function startQuiz() {
             document.getElementById('guide-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
             initDots();
-            currentQuestion = 0;
-            answers = [];
             showQuestion();
         }
 
         function showQuestion() {
             const q = questions[currentQuestion];
             const textEl = document.getElementById('question-text');
-            const catEl = document.getElementById('cat-label');
+            const prevBtn = document.getElementById('prev-btn');
             
             textEl.style.opacity = 0;
-            textEl.style.transform = 'translateY(10px)';
+            textEl.style.transform = 'translateY(8px)';
             
             setTimeout(() => {
                 textEl.textContent = q.text;
-                catEl.textContent = q.cat;
                 textEl.style.opacity = 1;
                 textEl.style.transform = 'translateY(0)';
                 
@@ -289,12 +330,14 @@
                 dots.forEach((dot, i) => {
                     dot.classList.toggle('active', i === currentQuestion);
                 });
-                updateNavButton();
-            }, 300);
+
+                if (currentQuestion > 0) prevBtn.classList.remove('hidden');
+                else prevBtn.classList.add('hidden');
+            }, 250);
         }
 
         function handleAnswer(value) {
-            answers.push(value);
+            answers[currentQuestion] = value;
             if (currentQuestion < questions.length - 1) {
                 currentQuestion++;
                 showQuestion();
@@ -303,28 +346,9 @@
             }
         }
 
-        function updateNavButton() {
-            const btn = document.getElementById('nav-button');
-            if (!btn) return;
-            if (currentQuestion === 0) {
-                btn.classList.add('hidden');
-                btn.onclick = null;
-                btn.textContent = '';
-            } else if (currentQuestion < questions.length - 1) {
-                btn.textContent = '返回上一题';
-                btn.onclick = goPrev;
-                btn.classList.remove('hidden');
-            } else {
-                btn.textContent = '重新测评';
-                btn.onclick = retake;
-                btn.classList.remove('hidden');
-            }
-        }
-
         function goPrev() {
             if (currentQuestion > 0) {
                 currentQuestion--;
-                if (answers.length > 0) answers.pop();
                 showQuestion();
             }
         }
@@ -345,90 +369,79 @@
             const container = document.getElementById('result-content');
             
             container.innerHTML = `
-                <!-- 核心状态：引入情绪闪回 -->
-                <div class="bento-card md:col-span-2 bg-slate-800 text-white">
-                    <h4 class="text-xs tracking-widest text-slate-500 mb-4 uppercase">Core Status / 核心解读</h4>
-                    <p class="text-xl font-light leading-relaxed">
+                <div class="report-section bg-slate-800 text-white">
+                    <h4 class="text-[9px] tracking-[0.2em] text-slate-400 mb-6 uppercase">Core Status / 核心解读</h4>
+                    <p class="text-base md:text-lg font-light leading-relaxed">
                         ${isCptsd ? 
-                        '你正在经历典型的 <span class="text-blue-300 font-medium">复杂性创伤后应激障碍 (CPTSD)</span> 状态。这不仅是记忆的碎片，更是一种全方位的“情绪闪回”——当你感到恐惧或无助时，你的身心仿佛瞬间退行到了那个充满威胁的童年环境。' : 
-                        '目前的症状未达临床阈值，但你的身心确实在发出求救信号。这可能是一种慢性的压力积压，也可能是某种“被忽视的创伤”正在隐隐作痛。'}
+                        '你正在经历典型的 <span class="text-accent font-medium italic underline underline-offset-8">复杂性创伤后应激障碍 (CPTSD)</span> 状态。这不仅是记忆的碎片，更是一种全方位的“情绪闪回”——当你感到恐惧或无助时，你的身心仿佛瞬间退行到了那个充满威胁的过去环境。' : 
+                        '目前的症状未达临床典型阈值，但你的身心确实表现出了高敏的应激痕迹。请不要轻视这些感受，每一个感到疲惫的瞬间，其实都是身体在向你发出温柔的求救，渴望被你重新看见。'}
                     </p>
                 </div>
 
-                <!-- 4F 策略 -->
-                <div class="bento-card">
-                    <h4 class="text-xs font-bold text-slate-500 mb-4 uppercase">Survivor Type / 4F 生存策略</h4>
-                    <p class="text-sm text-slate-600 font-light leading-relaxed">
-                        在创伤环境下，你可能进化出了某种防御机制：<br>
-                        <span class="highlight-text">战斗 (Fight)</span>：通过控制或愤怒来获得安全感；<br>
-                        <span class="highlight-text">逃跑 (Flight)</span>：通过完美主义或强迫性忙碌来逃避；<br>
-                        <span class="highlight-text">僵住 (Freeze)</span>：通过隔绝、麻木或幻想来躲避现实；<br>
-                        <span class="highlight-text">讨好 (Fawn)</span>：通过放弃自我、迎合他人来换取和平。
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="report-section">
+                        <h4 class="text-[9px] font-bold text-slate-400 mb-6 uppercase tracking-widest">Survival Types / 4F 生存策略</h4>
+                        <div class="space-y-4 text-xs text-slate-500 font-light leading-relaxed">
+                            <p>Pete Walker 指出，长期创伤迫使我们进化出特定的防御姿态：</p>
+                            <p><span class="text-accent font-semibold italic">战斗 (Fight)</span>：通过愤怒或追求控制获得安全感。<br>
+                            <span class="text-accent font-semibold italic">逃跑 (Flight)</span>：通过完美主义或忙碌逃避痛苦。<br>
+                            <span class="text-accent font-semibold italic">僵住 (Freeze)</span>：通过隔绝、麻木或幻想躲避现实。<br>
+                            <span class="text-accent font-semibold italic">讨好 (Fawn)</span>：通过放弃自我、迎合他人换取和平。</p>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <h4 class="text-[9px] font-bold text-slate-400 mb-6 uppercase tracking-widest">Inner Critic / 识别内在批判者</h4>
+                        <p class="text-xs text-slate-500 font-light leading-relaxed mb-6">
+                            你内心的那些自我指责、自我辱骂，其实是当年施害者声音的内化。
+                        </p>
+                        <p class="text-xs text-slate-800 italic border-l-2 border-accent/20 pl-4 leading-relaxed">
+                            “当你想骂自己时，请意识到那是他在骂你，而不是你在骂自己。剥离这些声音，是找回自我的第一步。”
+                        </p>
+                    </div>
+                </div>
+
+                <div class="report-section bg-[#fdfaf6]">
+                    <h4 class="text-[9px] font-bold text-slate-400 mb-6 uppercase tracking-widest">Regarding Forgiveness / 关于“原谅”</h4>
+                    <p class="text-sm text-slate-600 font-light leading-relaxed italic">
+                        “不原谅也没关系。”对于许多创伤幸存者，强迫性的宽恕可能是一种毁灭性的自我背叛。真正的疗愈始于你允许自己愤怒，允许自己为那个受困于黑暗的孩子哀悼。只有当你不再被迫宽恕，你便夺回了定义这段生命的主权。更多建议可参考《不原谅也没关系》。
                     </p>
                 </div>
 
-                <!-- 内在批判者：参考不原谅也没关系 -->
-                <div class="bento-card">
-                    <h4 class="text-xs font-bold text-slate-500 mb-4 uppercase">Inner Critic / 缩减内在批判者</h4>
-                    <p class="text-sm text-slate-600 font-light leading-relaxed">
-                        你内心的指责声其实是当年施害者声音的“内化”。当你觉得自己一无是处时，那是<span class="highlight-text">内在批判者</span>在发动攻击。你需要学会对这种声音说“停”，并意识到这些自责是当年为了在压力下生存而产生的错误归因。
-                    </p>
-                </div>
-
-                <!-- 关于原谅 -->
-                <div class="bento-card md:col-span-2 border-l-4 border-l-slate-800 bg-slate-50">
-                    <h4 class="text-xs font-bold text-slate-500 mb-4 uppercase">Regarding Forgiveness / 关于“原谅”</h4>
-                    <p class="text-sm text-slate-700 font-light leading-relaxed italic">
-                        不原谅也没关系。对于许多创伤幸存者，强迫性的原谅可能是一种过早的自我否定。疗愈往往始于<span class="font-semibold">允许愤怒与哀悼</span>，为那个曾经受伤的自己留出空间。当你不再被迫宽恕，力量会逐步回到你身上。更详尽的理解与练习可参考《不原谅也没关系》。
-                    </p>
-                </div>
-
-                <!-- 可执行指南：闪回管理 -->
-                <div class="bento-card md:col-span-2 bg-[#fcfdfd]">
-                    <h4 class="text-xs font-bold text-slate-500 mb-8 uppercase tracking-widest text-center">Actionable Guide / 疗愈实践（闪回管理 13 步简化版）</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-                        <div class="action-item">
-                            <h5 class="text-sm font-semibold mb-2">1. 对自己说：“我正在经历闪回”</h5>
-                            <p class="text-xs text-slate-500 font-light leading-relaxed">识别当下的痛苦不是事实，而是过去记忆的重现。你此刻是安全的。</p>
+                <div class="mt-16">
+                    <h3 class="serif-text text-2xl text-slate-800 mb-12 text-center tracking-widest">疗愈实践</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                        <div class="healing-step">
+                            <h5 class="text-xs font-semibold mb-2 text-accent">1. 承认现状</h5>
+                            <p class="text-[11px] text-slate-400 leading-relaxed font-light">对自己说：“我现在正在经历闪回，这种极度的痛苦是过去的残响，而非当下的事实。”</p>
                         </div>
-                        <div class="action-item">
-                            <h5 class="text-sm font-semibold mb-2">2. 安抚身体</h5>
-                            <p class="text-xs text-slate-500 font-light leading-relaxed">深呼吸。找回身体的界限感（如：重力毯、热水澡或拍打肢体）。</p>
+                        <div class="healing-step">
+                            <h5 class="text-xs font-semibold mb-2 text-accent">2. 安抚身体</h5>
+                            <p class="text-[11px] text-slate-400 leading-relaxed font-light">找一个温暖舒适的环境，通过深呼吸或喝温热的饮料，让过度警觉的神经系统缓慢降温。</p>
                         </div>
-                        <div class="action-item">
-                            <h5 class="text-sm font-semibold mb-2">3. 反击内在批判者</h5>
-                            <p class="text-xs text-slate-500 font-light leading-relaxed">当内心开始辱骂你时，立刻用“思维阻断法”打断它。不要尝试和它讲理。</p>
+                        <div class="healing-step">
+                            <h5 class="text-xs font-semibold mb-2 text-accent">3. 反击内在批判者</h5>
+                            <p class="text-[11px] text-slate-400 leading-relaxed font-light">识别那些“我不够好”的念头，果断地用思维阻断法停下它。这些念头是错误的归因。</p>
                         </div>
-                        <div class="action-item">
-                            <h5 class="text-sm font-semibold mb-2">4. 允许哀悼</h5>
-                            <p class="text-xs text-slate-500 font-light leading-relaxed">如果想哭就哭出来，那是积压了几十年的悲伤。泪水能降低应激水平。</p>
+                        <div class="healing-step">
+                            <h5 class="text-xs font-semibold mb-2 text-accent">4. 允许哀悼</h5>
+                            <p class="text-[11px] text-slate-400 leading-relaxed font-light">如果想哭就哭出来，那是积压了几十年的悲伤。泪水能降低应激水平。</p>
                         </div>
-                        <div class="action-item">
-                            <h5 class="text-sm font-semibold mb-2">5. 保持耐心</h5>
-                            <p class="text-xs text-slate-500 font-light leading-relaxed">闪回的消退需要时间。不要因为自己“还没好起来”而再次责备自己。</p>
+                        <div class="healing-step">
+                            <h5 class="text-xs font-semibold mb-2 text-accent">5. 寻求专业协助</h5>
+                            <p class="text-[11px] text-slate-400 leading-relaxed font-light">CPTSD 往往需要长期且专业的支持。寻找一个能安稳接住你碎片的人。</p>
                         </div>
-                        <div class="action-item">
-                            <h5 class="text-sm font-semibold mb-2">6. 寻求专业协助</h5>
-                            <p class="text-xs text-slate-500 font-light leading-relaxed">CPTSD 的疗愈非常艰难，找到一位理解创伤、支持“不原谅也没关系”的咨询师至关重要。</p>
+                        <div class="healing-step">
+                            <h5 class="text-xs font-semibold mb-2 text-accent">6. 保持温柔的耐心</h5>
+                            <p class="text-[11px] text-slate-400 leading-relaxed font-light">疗愈是一个螺旋上升的过程。反复是正常的，请像照顾一个受伤的婴孩一样照顾自己。</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="md:col-span-2 text-center py-12">
-                    <p class="text-[11px] text-slate-300 italic tracking-[0.1em]">
-                        “疗愈不是变得完美，而是学会带着伤痕，温柔而坚定地活在当下。”
-                    </p>
+                <div class="text-center py-24 opacity-20">
+                    <p class="text-[9px] tracking-[0.5em] uppercase text-slate-400">Light always finds a way through the cracks.</p>
                 </div>
             `;
-        }
-
-        function retake() {
-            currentQuestion = 0;
-            answers = [];
-            document.getElementById('result-screen').classList.add('hidden');
-            document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('guide-screen').classList.add('hidden');
-            document.getElementById('start-screen').classList.remove('hidden');
         }
     </script>
 </body>
