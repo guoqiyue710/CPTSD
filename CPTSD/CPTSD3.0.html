@@ -269,6 +269,64 @@
             padding: 0.6rem 1.85rem; border-radius: 0.85rem; font-weight: 700; font-size: 0.85rem;
             transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
         }
+        .btn-consultant:hover { background: var(--bg-accent); border-color: var(--primary-dark); color: var(--primary-dark); }
+
+        /* 微信二维码弹窗 */
+        #wechat-qr-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #wechat-qr-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        #wechat-qr-modal .modal-box {
+            background: white;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        #wechat-qr-modal .modal-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 1rem;
+        }
+        #wechat-qr-modal .modal-qr {
+            width: 100%;
+            max-width: 240px;
+            height: auto;
+            border-radius: 0.75rem;
+            display: block;
+            margin: 0 auto 1rem;
+        }
+        #wechat-qr-modal .modal-close {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            color: #718096;
+            background: #f7fafc;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-family: var(--font-family);
+        }
+        #wechat-qr-modal .modal-close:hover { background: #edf2f7; color: #2d3436; }
 
         .step-content { display: none; }
         .step-content.active { display: block; }
@@ -323,11 +381,12 @@
             text-transform: uppercase;
         }
 
-        /* 导出图片时的背景容器：报告内文字居中，保证生成 PNG 时排版统一 */
+        /* 报告区域统一排版：与生成 PNG 时一致，标题居中、正文两端对齐 */
         #report-capture-area {
             background: #ffffff;
             padding: 20px;
             border-radius: 2rem;
+            text-align: center;
         }
         #report-capture-area .report-summary-box {
             justify-content: center;
@@ -335,6 +394,10 @@
         }
         #report-capture-area .index-display {
             align-items: center;
+            text-align: center;
+        }
+        #report-capture-area .index-label,
+        #report-capture-area .index-value {
             text-align: center;
         }
         #report-capture-area .status-display {
@@ -346,6 +409,55 @@
             margin-top: 0.5rem;
             flex: none;
             width: 100%;
+        }
+        #report-capture-area .status-name,
+        #report-capture-area .status-desc {
+            text-align: center;
+        }
+        /* 板块标题（STEP、分类）居中 */
+        #report-capture-area .step-title-wrapper {
+            justify-content: center;
+            padding-left: 0;
+            border-left: none;
+        }
+        #report-capture-area .step-title-text {
+            border-left: none;
+            padding-left: 0;
+            text-align: center;
+        }
+        #report-capture-area .category-header {
+            justify-content: center;
+            padding-left: 0;
+        }
+        #report-capture-area .category-title {
+            text-align: center;
+        }
+        /* 正文保持两端对齐，与页面浏览一致 */
+        #report-capture-area .step-intro-box,
+        #report-capture-area .step-intro-box p {
+            text-align: justify;
+        }
+        #report-capture-area #conclusion-text p.font-bold {
+            text-align: center;
+        }
+        #report-capture-area #conclusion-text p.leading-relaxed {
+            text-align: justify;
+        }
+        #report-capture-area .content-card h4 {
+            text-align: center;
+        }
+        #report-capture-area .content-card p {
+            text-align: justify;
+        }
+        #report-capture-area .healing-path-card h4 {
+            text-align: center;
+        }
+        #report-capture-area .healing-path-card p {
+            text-align: justify;
+        }
+        #report-capture-area .radar-tip-container,
+        #report-capture-area .radar-tip-text {
+            text-align: center;
         }
         @media (min-width: 768px) {
             #report-capture-area .report-summary-box {
@@ -690,7 +802,7 @@
                     <div class="consultant-bg-shape"></div>
                     <div class="consultant-icon" style="color: var(--primary-color); margin-bottom: 0.5rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>
                     <h5 class="consultant-text-msg">如果您还有需要，可点击下方寻找合适的心理咨询师</h5>
-                    <a href="#" class="btn-consultant"><span>寻找心理咨询师</span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+                    <a href="#" class="btn-consultant" id="btn-consultant" role="button"><span>寻找心理咨询师</span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
                 </div>
             </section>
 
@@ -705,6 +817,15 @@
                     GENERATE REPORT · 生成报告长图
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- 微信二维码弹窗 -->
+    <div id="wechat-qr-modal" aria-hidden="true">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <p class="modal-title">添加微信，获取心理咨询支持</p>
+            <img src="添加微信.jpg" alt="微信二维码" class="modal-qr" />
+            <button type="button" class="modal-close" id="wechat-qr-close">关闭</button>
         </div>
     </div>
 
@@ -894,18 +1015,48 @@
             btn.disabled = true;
 
             try {
-                // 使用 html2canvas 渲染指定区域
+                // 先取当前页面上雷达图 canvas 的图片，否则 html2canvas 克隆的 canvas 是空白的
+                const radarCanvas = document.getElementById('radarChart');
+                let chartDataUrl = '';
+                let chartW = 0, chartH = 0;
+                if (radarChart && radarCanvas) {
+                    chartDataUrl = radarCanvas.toDataURL('image/png');
+                    chartW = radarCanvas.width;
+                    chartH = radarCanvas.height;
+                }
+                const captureWidth = captureArea.offsetWidth;
+
                 const canvas = await html2canvas(captureArea, {
                     scale: 2, // 提高清晰度
                     useCORS: true, // 允许跨域字体/图片
                     backgroundColor: '#ffffff',
                     logging: false,
-                    onclone: (documentClone) => {
+                    windowWidth: captureWidth, // 与页面一致宽度，使排版、媒体查询与网页一致
+                    windowHeight: Math.max(captureArea.scrollHeight, window.innerHeight),
+                    onclone: (documentClone, clonedElement) => {
+                        // 固定克隆区域宽度，使排版与当前页面一致
+                        clonedElement.style.width = captureWidth + 'px';
+                        clonedElement.style.boxSizing = 'border-box';
                         // 在克隆出的DOM中确保没有遮罩层
                         const explainer = documentClone.getElementById('floating-explainer');
                         if (explainer) explainer.style.display = 'none';
                         const chartBox = documentClone.getElementById('radar-chart-box');
                         if (chartBox) chartBox.style.opacity = '1';
+                        // 用当前雷达图图片替换克隆中的空白 canvas，这样长图与网页显示一致
+                        if (chartDataUrl && chartW && chartH) {
+                            const clonedCanvas = documentClone.getElementById('radarChart');
+                            if (clonedCanvas) {
+                                const img = documentClone.createElement('img');
+                                img.setAttribute('src', chartDataUrl);
+                                img.style.width = chartW + 'px';
+                                img.style.height = chartH + 'px';
+                                img.style.display = 'block';
+                                img.style.maxWidth = '100%';
+                                img.style.objectFit = 'contain';
+                                clonedCanvas.parentNode.appendChild(img);
+                                clonedCanvas.style.display = 'none';
+                            }
+                        }
                     }
                 });
 
@@ -930,6 +1081,27 @@
                 resetRadar();
             }
         });
+
+        // 寻找心理咨询师：点击显示微信二维码弹窗
+        (function() {
+            const btn = document.getElementById('btn-consultant');
+            const modal = document.getElementById('wechat-qr-modal');
+            const closeBtn = document.getElementById('wechat-qr-close');
+            if (!btn || !modal) return;
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.classList.add('show');
+                modal.setAttribute('aria-hidden', 'false');
+            });
+            function closeModal() {
+                modal.classList.remove('show');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+        })();
     </script>
 </body>
 </html>
