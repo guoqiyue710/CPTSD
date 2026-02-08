@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溯源之旅 - 心理测评</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入商用免费字体：思源宋体 (Noto Serif SC) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-family: 'Noto Serif SC', serif;
+            --primary-color: #DE95BA;
+            --bg-accent: #FFEFE0;
+            --primary-light: #f5dae8;
+            --primary-dark: #c07b9f;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, #fdfcfb 0%, #eef2f7 100%);
+            color: #2d3436;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(222, 149, 186, 0.1);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, h4, h5 { font-family: var(--font-family); font-weight: 700; }
+
+        /* 首页标题设计 */
+        .main-title {
+            font-size: 3rem;
+            letter-spacing: 0.3em;
+            font-weight: 900;
+            color: #1a202c;
+            line-height: 1;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .title-underline {
+            width: 80px;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            margin: 0.75rem auto 2.5rem;
+            border-radius: 50%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #f1b2d3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
+            color: white;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(222, 149, 186, 0.4); }
+
+        .option-btn {
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            background: white;
+            font-weight: 400;
+            border-radius: 15px;
+        }
+        .option-btn:hover { background-color: #fff9f5; border-color: var(--primary-color); transform: translateX(4px); }
+        .option-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+        /* 答题顶端进度指示器设计：粉色斜体大号 */
+        .current-idx {
+            color: var(--primary-color);
+            font-style: italic;
+            font-size: 1.85rem;
+            font-weight: 950;
+            margin-right: 4px;
+            line-height: 1;
+        }
+        .total-idx {
+            color: #cbd5e0;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        /* 居中板块标题设计 */
+        .section-big-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2.5rem 0 2rem;
+        }
+        .header-tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.6rem 2rem;
+            border-radius: 1rem;
+            font-weight: 900;
+            font-size: 1.35rem;
+            letter-spacing: 0.15em;
+            box-shadow: 6px 6px 0 var(--primary-light);
+            flex-shrink: 0;
+            z-index: 2;
+        }
+        .header-line {
+            height: 2px;
+            flex-grow: 1;
+            background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+        }
+
+        /* 顶部指数看板 */
+        .report-summary-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border: 2px solid var(--primary-light);
+            border-radius: 2.5rem;
+            padding: 1.75rem 2.5rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 10px 30px rgba(222, 149, 186, 0.05);
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .index-display { display: flex; flex-direction: column; align-items: flex-start; }
+        .index-label { font-size: 0.875rem; font-weight: 800; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+        .index-value { font-size: 3.5rem; font-weight: 950; color: var(--primary-color); line-height: 1; }
+        .status-display {
+            text-align: right; border-left: 2px solid #f7fafc; padding-left: 2rem;
+            display: flex; flex-direction: column; justify-content: center; flex: 1;
+        }
+        .status-name { font-size: 1.85rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.25rem; }
+        .status-desc { font-size: 0.85rem; color: #718096; font-style: italic; opacity: 0.8; }
+
+        /* STEP 样式 */
+        .step-title-wrapper { position: relative; margin-bottom: 1.5rem; display: flex; align-items: center; }
+        .step-number-bg {
+            font-size: 3.5rem; font-weight: 900; color: var(--primary-color); opacity: 0.12;
+            position: absolute; left: -0.8rem; top: -1.4rem; font-style: italic; user-select: none;
+        }
+        .step-title-text {
+            font-size: 1.6rem; font-weight: 800; color: #1a202c; position: relative;
+            padding-left: 0.6rem; border-left: 5px solid var(--primary-color); letter-spacing: 0.02em;
+        }
+        
+        /* 具有设计感的文字板块 - STEP 1-3 引导文字统一设定为 0.95rem */
+        .step-intro-box {
+            background: linear-gradient(to right, #fffcfb, white);
+            border-left: 4px solid var(--primary-color);
+            padding: 2.25rem;
+            border-radius: 0 1.5rem 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            margin-bottom: 3rem;
+            color: #4a5568;
+            line-height: 1.9;
+            font-weight: 500;
+            font-size: 0.95rem; 
+        }
+
+        .content-card {
+            background: white; padding: 1.5rem; border-radius: 1.5rem; border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s ease; height: 100%;
+            position: relative; overflow: hidden;
+        }
+        .content-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(222, 149, 186, 0.08); }
+
+        .card-number {
+            font-size: 1.8rem; font-weight: 900; color: var(--primary-color); opacity: 0.15;
+            position: absolute; right: 1rem; top: 0.5rem; font-style: italic; font-family: var(--font-family);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 3.5rem 0 1.5rem;
+            padding-left: 0.5rem;
+        }
+        .category-tag {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .category-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #2d3748;
+        }
+
+        .healing-path-card {
+            background: white; border-radius: 20px; padding: 2rem; border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.03); position: relative; overflow: hidden;
+        }
+        .healing-path-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary-color), var(--bg-accent)); }
+
+        /* 雷达图与释义交互设计 */
+        .chart-wrapper { position: relative; margin: 0 auto; max-width: 600px; }
+        .chart-box { position: relative; margin: 0 auto; width: 100%; transition: opacity 0.4s ease; }
+        .floating-explainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 85%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(222, 149, 186, 0.4);
+            border-radius: 1.5rem;
+            padding: 1.75rem;
+            box-shadow: 0 20px 50px rgba(222, 149, 186, 0.15);
+            z-index: 100;
+            display: none;
+            pointer-events: auto;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes popIn { to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        .close-explainer {
+            position: absolute; top: -10px; right: -10px; background: var(--primary-color);
+            color: white; width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 12px;
+            cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* 测评结果反馈文字字号统一：设为 1.05rem (比 0.95rem 的引导文字大一号) */
+        #conclusion-text {
+            font-size: 1.05rem; 
+            line-height: 1.9;
+        }
+
+        /* 付费锁设计 */
+        .lock-card-compact {
+            background: white; border: 2px solid var(--primary-light); border-radius: 1.5rem;
+            padding: 2.5rem 1.5rem; display: flex; flex-direction: column; align-items: center;
+            box-shadow: 0 4px 15px rgba(222, 149, 186, 0.05); margin-top: -1.5rem; position: relative; z-index: 2;
+        }
+
+        /* 咨询师板块 */
+        .consultant-container {
+            margin: 3rem 0 0; width: 100%; padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, #fffcfb 0%, var(--bg-accent) 100%);
+            border-radius: 2rem; border: 1px solid rgba(222, 149, 186, 0.15);
+            position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        .consultant-text-msg {
+            font-size: 0.9rem; font-weight: 600; color: #4a5568; margin-bottom: 0.75rem;
+            z-index: 1; letter-spacing: 0.01em; line-height: 1.4;
+        }
+        .btn-consultant {
+            background: white; color: var(--primary-dark); border: 1.5px solid var(--primary-color);
+            padding: 0.6rem 1.85rem; border-radius: 0.85rem; font-weight: 700; font-size: 0.85rem;
+            transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+        }
+
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+
+        /* 脚印进度条 */
+        .footprint-trail { position: relative; height: 40px; display: flex; align-items: center; justify-content: space-between; width: 100%; margin: 0 auto; }
+        .footprint-dot-line { 
+            position: absolute; 
+            left: 0; 
+            right: 0; 
+            height: 1px; 
+            border-top: 1px dashed #e2e8f0; 
+            top: 50%; 
+            z-index: 0; 
+        }
+        .footprint-item { position: relative; z-index: 1; transition: all 0.6s ease; opacity: 0.15; color: #eabec0; transform: scale(0.7); }
+        .footprint-item.active { opacity: 1; color: var(--primary-color); transform: scale(1.05); filter: drop-shadow(0 0 8px rgba(222, 149, 186, 0.5)); }
+        .footprint-item:nth-child(even) { margin-top: -10px; transform: rotate(-15deg); }
+        .footprint-item:nth-child(odd) { margin-top: 10px; transform: rotate(15deg); }
+
+        .inquiry-label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.2em; color: var(--primary-color); display: flex; align-items: center; }
+        .inquiry-dot { width: 4px; height: 4px; background: var(--primary-color); border-radius: 50%; margin: 0 8px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0.4; } 100% { transform: scale(1); opacity: 1; } }
+        a { color: var(--primary-dark); text-decoration: underline; font-weight: 600; }
+        p { line-height: 1.8; }
+
+        /* 雷达图底部提示文字装饰 */
+        .radar-tip-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: -35px; 
+            margin-bottom: 30px;
+        }
+        .radar-tip-line-left { 
+            height: 1px; 
+            width: 35px; 
+            background: linear-gradient(to left, #cbd5e0, transparent); 
+        }
+        .radar-tip-line-right { 
+            height: 1px; 
+            width: 35px; 
+            background: linear-gradient(to right, #cbd5e0, transparent); 
+        }
+        .radar-tip-text {
+            font-size: 12px;
+            color: #a0aec0;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            font-style: italic;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6 flex items-center justify-center">
+
+    <div id="app" class="w-full max-w-3xl glass-card rounded-[2.5rem] p-5 md:p-12 relative overflow-hidden">
+        
+        <div class="absolute -top-24 -right-24 w-48 h-48 decor-ball-1 rounded-full mix-blend-multiply filter blur-3xl opacity-40"></div>
+        <div class="absolute -bottom-24 -left-24 w-48 h-48 decor-ball-2 rounded-full mix-blend-multiply filter blur-3xl opacity-40"></div>
+
+        <!-- 页面 1: 首页 -->
+        <div id="page-home" class="step-content active fade-in">
+            <div class="mb-6">
+                <div class="space-y-5 text-gray-600 leading-relaxed mb-12 text-justify">
+                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">“为什么别人无意间的一句话就会让你突然产生强烈的窒息感？”</p>
+                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">“为什么父母随口的一句评价，就能让你瞬间掉进自我怀疑的深渊？”</p>
+                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">“为什么在亲密关系里明明对方没有做错什么，你却时刻焦虑，总觉得这段感情随时会崩塌？”</p>
+                    <p class="pt-2 text-base font-medium text-gray-700">我们已经成年，但在那个人面前却瞬间缩回成那个无助的孩子；如果那个被称为“家”的地方，让你感到的不是松弛而是戒备；如果那段本该滋养你的爱情，却成了你反复确认自己“是否值得被爱”的考场；如果每一次深情，都像是在完成一场耗尽元气的演出……</p>
+                    <p class="text-base font-medium text-gray-700">别急着责怪自己，那是你的身体在替你记得那些被大脑刻意遗忘的创伤。如果你觉得生活总是在“生存”而非“生活”，如果你感到的痛苦总是难以名状，请花几分钟走进这个专业的测评。听听那些留在你身体里的“生存回响”。</p>
+                    <p class="text-base font-medium text-gray-700">这一次，我们不谈原谅，只谈疗愈。</p>
+                </div>
+                <div class="mb-12 text-center">
+                    <h1 class="main-title">溯源之旅</h1>
+                    <div class="title-underline"></div>
+                    <p class="text-lg text-gray-500 font-light italic text-center">这是一次关于自我的温柔观测，让我们潜入记忆的深处，完成一次溯源之旅。</p>
+                </div>
+                <div class="flex justify-center">
+                    <button onclick="nextPage('page-instruction')" class="btn-primary text-white px-12 py-4 rounded-[1.25rem] text-base shadow-lg hover:scale-105 active:scale-95 transition-all">开启溯源之旅</button>
+                </div>
+            </div>
+            <!-- 第一页最下方的文本 -->
+            <div class="mt-16 pt-8 border-t border-gray-100 text-[12px] text-gray-400 text-justify leading-6 font-light">
+                <p>本测评基于ICD-11国际诊断标准，结合了国际创伤问卷（ITQ） 量表设计进行开发，结果仅供自我探索与参考，不作为医学诊断依据。如需确诊或进行针对性治疗，请寻求精神科医生或临床心理学专家的专业帮助。</p>
+                <p class="mt-3">发展建议部分主要参考皮特·沃克（Pete Walker）的著作——《不原谅也没关系》（Complex PTSD: From Surviving to Thriving）。</p>
+            </div>
+        </div>
+
+        <!-- 页面 2: 指导语 -->
+        <div id="page-instruction" class="step-content fade-in">
+            <div class="mb-5 flex items-center text-[#DE95BA] font-bold">
+                <span class="mr-3 tracking-[0.2em] text-[10px]">GUIDANCE</span>
+                <div class="h-[1px] flex-grow bg-[#f5dae8]"></div>
+            </div>
+            <h2 class="text-2xl text-gray-800 mb-8 font-bold">指导语</h2>
+            <div class="text-gray-600 leading-[2.1] mb-8 text-base text-justify">
+                <p>我想邀请你做一次勇敢的停留。请回想一段曾在你生命中留下深重痕迹、甚至让你感到破碎的创伤事件。试着将它详细描述出来，不必在乎文采，也不必强求完整，只需诚实地让那些压抑已久的情绪流淌出来。我知道这或许并不容易，如果你感到疲惫，可以随时停下来，但请记得，此刻的你是安全的。你可以像整理旧物一样，将那些细碎的、沉重的、或难以言说的感受，一笔一画地交付给文字。</p>
+            </div>
+            <textarea id="trauma-text" class="w-full h-48 p-6 rounded-[2rem] border border-gray-200 focus:border-[#DE95BA] focus:ring-4 focus:ring-[#fff5f9] transition-all resize-none outline-none mb-8 text-gray-700 bg-[#fffcfb] bg-opacity-50 text-base font-medium" style="font-family: var(--font-family);" placeholder="在这里写下你的回忆或感受..."></textarea>
+            <div class="text-gray-500 text-sm mb-10 leading-relaxed text-justify">
+                接下来，请带着这段回忆，以当下最真实的感受进入测评，整个过程约需要5分钟，你准备好了吗？
+            </div>
+            <button onclick="startQuestions()" class="btn-primary text-white px-10 py-4 rounded-[1.25rem] text-base w-full sm:w-auto shadow-lg">我准备好了</button>
+        </div>
+
+        <!-- 题目页 -->
+        <div id="page-question" class="step-content fade-in">
+            <div class="mb-12">
+                <div class="flex justify-between items-end mb-8">
+                    <div class="question-indicator">
+                        <span class="current-idx" id="current-q-index">1</span><span class="total-idx">/ 18</span>
+                    </div>
+                    <div class="inquiry-label"><span>INQUIRY</span><div class="inquiry-dot"></div><span>溯源中</span></div>
+                </div>
+                <div class="footprint-trail" id="footprint-container">
+                    <div class="footprint-dot-line"></div>
+                </div>
+            </div>
+            <div id="question-container">
+                <h3 id="question-title" class="text-2xl text-gray-800 leading-[1.6] mb-10 min-h-[6rem] font-bold">加载中...</h3>
+                <div class="flex flex-col space-y-4" id="options-group">
+                    <button class="option-btn p-5 rounded-[1.25rem] text-left text-base font-medium shadow-sm hover:shadow-md transition-all" data-value="0">完全没有</button>
+                    <button class="option-btn p-5 rounded-[1.25rem] text-left text-base font-medium shadow-sm hover:shadow-md transition-all" data-value="1">偶尔会</button>
+                    <button class="option-btn p-5 rounded-[1.25rem] text-left text-base font-medium shadow-sm hover:shadow-md transition-all" data-value="2">经常会</button>
+                    <button class="option-btn p-5 rounded-[1.25rem] text-left text-base font-medium shadow-sm hover:shadow-md transition-all" data-value="3">大部分时间是这样</button>
+                    <button class="option-btn p-5 rounded-[1.25rem] text-left text-base font-medium shadow-sm hover:shadow-md transition-all" data-value="4">总是这样</button>
+                </div>
+            </div>
+            <div class="mt-16 flex justify-start">
+                <button id="prev-btn" onclick="prevQuestion()" class="text-gray-400 hover:text-gray-600 font-semibold text-sm flex items-center transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>返回上一题
+                </button>
+            </div>
+        </div>
+
+        <!-- 页面: 结果报告 -->
+        <div id="page-report" class="step-content fade-in">
+            
+            <div class="section-big-header">
+                <div class="header-line"></div>
+                <div class="header-tag">测评报告</div>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="report-summary-box">
+                <div class="index-display">
+                    <span class="index-label">心理创伤影响指数</span>
+                    <span id="impact-index" class="index-value">0%</span>
+                </div>
+                <div class="status-display">
+                    <span id="status-definition" class="status-name">分析中...</span>
+                    <span id="report-motto" class="status-desc"></span>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <div class="chart-wrapper" id="chart-wrapper">
+                    <div class="chart-box" id="radar-chart-box"><canvas id="radarChart"></canvas></div>
+                    <div id="floating-explainer" class="floating-explainer text-justify">
+                        <div class="close-explainer" onclick="resetRadar()">✕</div>
+                        <div id="explainer-content" class="text-gray-700 leading-relaxed font-medium text-sm"></div>
+                    </div>
+                </div>
+                <div class="radar-tip-container">
+                    <div class="radar-tip-line-left"></div>
+                    <p class="radar-tip-text">直接点击维度名称了解释义</p>
+                    <div class="radar-tip-line-right"></div>
+                </div>
+            </div>
+
+            <!-- 反馈文案卡片 -->
+            <div class="p-10 bg-white rounded-[2.5rem] border border-white shadow-xl relative mb-12 text-justify">
+                 <div class="absolute top-6 left-6 text-[#fbe7f0] transform -scale-x-100 opacity-60">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017V14H15.017C13.3601 14 12.017 12.6569 12.017 11V5C12.017 3.34315 13.3601 2 15.017 2H21.017C22.6738 2 24.017 3.34315 24.017 5V11C24.017 12.6569 22.6738 14 21.017 14H21.017C21.017 16.2091 19.2261 18 17.017 18V21H14.017ZM2.01697 21L2.01697 18C2.01697 16.8954 2.91241 16 4.01697 16H7.01697V14H3.01697C1.36012 14 0.0169678 12.6569 0.0169678 11V5C0.0169678 3.34315 1.36012 2 3.01697 2H9.01697C10.6738 2 12.017 3.34315 12.017 5V11C12.017 12.6569 10.6738 14 9.01697 14H9.01697C9.01697 16.2091 7.22612 18 5.01697 18V21H2.01697Z"></path></svg>
+                 </div>
+                 <div id="conclusion-text" class="space-y-6 text-gray-700 font-normal"></div>
+            </div>
+
+            <div class="section-big-header">
+                <div class="header-line"></div>
+                <div class="header-tag">发展建议</div>
+                <div class="header-line"></div>
+            </div>
+
+            <div class="space-y-16">
+                <div class="text-center italic text-gray-400 text-lg font-medium mb-12">“创伤不是你的错，但复原是你自己的责任。”</div>
+
+                <div id="report-details" class="space-y-16">
+                    <!-- STEP 1 分类展示 -->
+                    <section>
+                        <div class="step-title-wrapper"><span class="step-number-bg">01</span><h3 class="step-title-text">STEP 1：把迷雾中的怪兽一一命名</h3></div>
+                        <div class="step-intro-box text-justify">
+                            在进入具体的修复之前，我们必须先看清敌人的样子，也就是“识别怪兽”。那些你眼中的“性格缺陷”或“莫名情绪”，是你在恶劣环境下生长出的“生存盔甲”。<br><br>
+                            识别并命名这些怪兽是为了夺回控制权，是为了完成一次至关重要的转换：从“我很有问题”转变为“我经历过非常严重的事情”。<br><br>
+                            如下是你可能见到过的，一种或几种“怪兽”：
+                        </div>
+
+                        <!-- 分类卡片内容 -->
+                        <div class="category-header">
+                            <span class="category-tag bg-[#fff0f6] text-[#c07b9f]">Self-Perception</span>
+                            <span class="category-title">面向自我的回响</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
+                            <div class="content-card">
+                                <div class="card-number">01</div>
+                                <h4 class="font-bold text-gray-900 text-lg mb-2">情绪闪回</h4>
+                                <p class="text-gray-500 leading-relaxed text-xs text-justify">你突然被拽回过去那种无助、恐惧或被羞辱的情绪中，虽然你不知道为什么，但那种窒息感却真实得如同此刻正在发生。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">02</div>
+                                <h4 class="font-bold text-gray-900 text-lg mb-2">毒性羞耻感</h4>
+                                <p class="text-gray-500 leading-relaxed text-xs text-justify">这不仅仅是“做错事”的内疚，而是一种“我整个人就是错的、是恶心的、是坏掉了”的深层信念。它像一种腐蚀性的液体，让你觉得自己不配得到任何爱与尊重。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">03</div>
+                                <h4 class="font-bold text-gray-900 text-lg mb-2">强烈的孤独感和被抛弃感</h4>
+                                <p class="text-gray-500 leading-relaxed text-xs text-justify">这是一种极度的孤独，仿佛被全世界所抛弃。这种感觉往往伴随着巨大的羞耻感，让你根据是因为自己太差劲才会被这样对待。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">04</div>
+                                <h4 class="font-bold text-gray-900 text-lg mb-2">脆弱的自尊</h4>
+                                <p class="text-gray-500 leading-relaxed text-xs text-justify">哪怕是一句轻微的建议，在耳中都会被放大成震耳欲聋的指责，让你瞬间跌入自我怀疑的深渊。</p>
+                            </div>
+                        </div>
+
+                        <div class="category-header">
+                            <span class="category-tag bg-[#edf2ff] text-[#4263eb]">Connection</span>
+                            <span class="category-title">面向与他人和世界的关系</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-sm">
+                            <div class="content-card">
+                                <div class="card-number">05</div>
+                                <h4 class="font-bold text-gray-900 text-lg mb-2">依恋障碍</h4>
+                                <p class="text-gray-500 leading-relaxed text-xs text-justify">由于早期最亲近的人（通常是抚养者）无法提供安全感，导致你学会了将“他人”等同于“危险”。这让你在成年后的关系中，要么极度渴望靠近，要么本能地推开所有人。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">06</div>
+                                <h4 class="font-bold text-gray-900 text-lg mb-2">发展停滞</h4>
+                                <p class="text-gray-500 leading-relaxed text-xs text-justify">创伤消耗了太多的生存能量，导致你在情感调节、自我保护或社交技巧等某些方面，似乎还停留在当年的那个孩子阶段，没能获得成年人应有的那份“从容”。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">07</div>
+                                <h4 class="font-bold text-gray-900 text-lg mb-2">人际关系困难</h4>
+                                <p class="text-gray-500 leading-relaxed text-xs text-justify">由于长期处于防御状态，你很难与人建立深层且平等的连接。你可能在关系中习惯性地讨好、逃避、对抗或者干脆封闭自己。</p>
+                            </div>
+                        </div>
+
+                        <div class="category-header">
+                            <span class="category-tag bg-[#fff4e6] text-[#d9480f]">Physiology</span>
+                            <span class="category-title">身体承载的记忆</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-sm mb-16">
+                            <div class="content-card">
+                                <div class="card-number">08</div>
+                                <h4 class="font-bold text-gray-800 text-lg mb-2">极端的情绪波动</h4>
+                                <p class="text-gray-500 text-xs leading-relaxed text-justify">你的情绪系统就像一个大起大落的过山车，要么冷若冰霜（麻木），要么炽热如火（暴怒或惊恐），很难维持在中间那种平和的状态。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">09</div>
+                                <h4 class="font-bold text-gray-800 text-lg mb-2">发生解离</h4>
+                                <p class="text-gray-500 text-xs leading-relaxed text-justify">当痛苦超过承载能力时，大脑会自动“拔掉电源”。会对很多事情非常麻木，与自己的感受隔得很远，这其实是身体在为你强制止痛。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">10</div>
+                                <h4 class="font-bold text-gray-800 text-lg mb-2">触发“战或逃”反应</h4>
+                                <p class="text-gray-500 text-xs leading-relaxed text-justify">某些看似无关的细节（一个眼神、一种气味）会瞬间激活大脑的杏仁核。即使环境安全，你的身体也会瞬间进入“战”或“逃”的状态，心跳加速，肌肉紧绷。长期创伤可能会迫使我们进化出特定的防御姿态。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">11</div>
+                                <h4 class="font-bold text-gray-800 text-lg mb-2">过度敏感</h4>
+                                <p class="text-gray-500 text-xs leading-relaxed text-justify">你的神经系统被调到了最高灵敏度。别人眼中的“小事”，对你来说可能都是一次毁灭性的打击。你不仅是在应对眼前的压力，更是在应对过往所有压力的总和。</p>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-number">12</div>
+                                <h4 class="font-bold text-gray-800 text-lg mb-2">被动自杀想象或自残行为</h4>
+                                <p class="text-gray-500 text-xs leading-relaxed text-justify">它更多被理解为一种“被动求救”。当你实在找不到逃离痛苦的出路时，大脑会产生“消失”的念头，作为一种极端的、最后的解脱幻想。</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- STEP 2 完整内容 -->
+                    <section>
+                        <div class="step-title-wrapper"><span class="step-number-bg">02</span><h3 class="step-title-text">STEP 2：我们可以通过这些路径来滋养自己</h3></div>
+                        <div class="step-intro-box text-justify">
+                            第一步是“识别怪兽”，第二步来“重建家园”。<br><br>
+                            你不需要再为了生存戴着沉重盔甲疲于奔命，学着把自己当成植物来养。就像一棵受过伤的树，它需要阳光（认知）、水分（情绪）、土壤的稳固（身体）以及生命的意义（灵性）。<br><br>
+                            疗愈不是一场线性的攀爬，而是一场多维度的复苏，你可以先选择那个“此时此刻”最需要的方式，一点点地重新养护自己、观照自己。
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                            <div class="healing-path-card">
+                                <div class="text-[#DE95BA] font-bold mb-3 flex items-center text-[10px] tracking-widest uppercase">COGNITIVE HEALING · 认知疗愈</div>
+                                <h4 class="font-bold text-gray-900 text-xl mb-3 tracking-tight">削弱内在审判官</h4>
+                                <p class="text-gray-600 leading-[1.8] mb-4 text-xs font-normal text-justify">核心是“辨识并反击”。识别情绪闪回，并有意识地反驳那些自我攻击的念头。当那个声音说‘你真差劲’时，试着告诉它：这只是过去创伤留下的回声。我们要把那个严苛的监督者培养成温柔的同行者。</p>
+                            </div>
+                            <div class="healing-path-card">
+                                <div class="text-[#DE95BA] font-bold mb-3 flex items-center text-[10px] tracking-widest uppercase">EMOTIONAL HEALING · 情绪疗愈</div>
+                                <h4 class="font-bold text-gray-900 text-xl mb-3 tracking-tight">重新学会哀悼</h4>
+                                <p class="text-gray-600 leading-[1.8] mb-4 text-xs font-normal text-justify">给情绪更多“允许和接纳”。哀悼包括哭泣和发怒。允许自己为了当年的那个孩子而痛哭，允许自己为了所遭受的不公而愤怒。不原谅也没关系。</p>
+                            </div>
+                            <div class="healing-path-card">
+                                <div class="text-[#DE95BA] font-bold mb-3 flex items-center text-[10px] tracking-widest uppercase">SOMATIC HEALING · 身体疗愈</div>
+                                <h4 class="font-bold text-gray-900 text-xl mb-3 tracking-tight">从紧绷中撤退</h4>
+                                <p class="text-gray-600 leading-[1.8] mb-4 text-xs font-normal text-justify">核心是“关掉生存雷达”。通过呼吸练习、身体扫描、渐进式肌肉放松，告诉你的神经系统：“现在安全了。”学习重新居住在自己的身体里。</p>
+                            </div>
+                            <div class="healing-path-card">
+                                <div class="text-[#DE95BA] font-bold mb-3 flex items-center text-[10px] tracking-widest uppercase">SPIRITUAL HEALING · 灵性疗愈</div>
+                                <h4 class="font-bold text-gray-900 text-xl mb-3 tracking-tight">寻找生命的锚点</h4>
+                                <p class="text-gray-600 leading-[1.8] mb-4 text-xs font-normal text-justify">有意识地建立与他人、自然、或某种意义的连接。帮您找到那个“锚点”，让你相信自己依然是宇宙中独特且有价值的一部分。这是一种重新爱上生命的能力。</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- STEP 3 完整文本 -->
+                    <section class="pb-8">
+                        <div class="step-title-wrapper"><span class="step-number-bg">03</span><h3 class="step-title-text">STEP 3：更多疗愈的进程与细节</h3></div>
+                        <div class="step-intro-box text-justify">
+                            我们完成了第一步“识别怪兽”，第二步“重建家园”，你可能想知道更多具体的步骤，那么第三步就是给自己“挑选一些心理急救工具”。<br><br>
+                            疗愈很难一蹴而就，它需要你在无数个细微的瞬间里，选择不再对自己施暴。希望以下这些步骤和工具可以在你难过时稳稳接住你，能够让你从深渊爬出来的时候有一个好用的、适合你的梯子。让你平安降落、走回岸边。
+                        </div>
+                        
+                        <div class="lock-card-compact">
+                            <div class="w-14 h-14 bg-[#fff9f5] rounded-full flex items-center justify-center mb-6 text-[#DE95BA] shadow-sm"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg></div>
+                            <h4 class="text-2xl font-black text-gray-900 mb-2 text-center">解锁深度疗愈方案</h4>
+                            <p class="text-gray-500 text-sm mb-8 text-center leading-relaxed px-4">包含管理闪回的13个步骤、缩减批判者及哀悼指南</p>
+                            <button class="btn-unlock group font-black px-12 py-3.5 bg-gradient-to-r from-[#DE95BA] to-[#f1b2d3] text-white rounded-xl shadow-lg">立即付费解锁</button>
+                        </div>
+
+                        <!-- 恢复咨询师板块 -->
+                        <div class="consultant-container">
+                            <div class="consultant-bg-shape"></div>
+                            <div class="consultant-icon" style="color: var(--primary-color); margin-bottom: 0.5rem;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>
+                            <h5 class="consultant-text-msg">如果您还有需要，可点击下方寻找合适的心理咨询师</h5>
+                            <a href="#" class="btn-consultant"><span>寻找心理咨询师</span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="text-center pt-10 border-t border-gray-100 font-bold mb-10">
+                <button onclick="location.reload()" class="text-gray-400 hover:text-[#DE95BA] uppercase tracking-[0.2em] text-[10px] font-extrabold">Restart Journey · 重新开启溯源</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = ["在我清醒时，有关该事件的痛苦记忆会突然闯入脑海。", "我会做与该事件有关的噩梦，或者梦里的感觉和当时一样。", "我刻意不去想该事件，或努力不去感受与该事件有关的情绪。", "我刻意避开会让你想起该事件的地点、人物或活动。", "我感到高度警觉、时刻提防，或觉得必须随时检查四周。", "我容易受惊或对细小的声音/动作产生强烈的惊跳反应。", "上述症状显著干扰了我的社交生活", "上述症状显著干扰了我的工作或学习。", "上述症状显著干扰了我的家庭生活。", "当我感到不安时，需要很长时间才能平静下来。", "我感到情感麻木，或者觉得无法再体验到快乐和满足感。", "我觉得自己是个彻底的失败者，或者觉得觉得自己毫无价值。", "我对自己感到羞愧，或者觉得自己在该事件中（ (或之后）被玷污/损坏了。", "我感到与他人格格不入，或者与周围的人都有距离感。", "我发现自己很难与人保持亲近，或者很难在情感上信任他人。", "上述症状显著干扰了我的社交生活。", "上述症状显著干扰了我的工作或学习。", "上述症状显著干扰了我的家庭生活。"];
+        const dimensionIntro = ["情绪闪回：过去并没有过去，它经常突然袭击你。你的大脑就像一台放映机，不断强迫你重温痛苦。", "回避行为：为了安全，你不得不避开很多可能触发回忆的人和事。这种逃避虽然安全但也隔绝了生活的可能性。", "高度警觉：你的神经时刻紧绷，难以放松。你像是在一个从未停火的战场上，随时准备应对下一个攻击。", "情绪调节障碍：情绪起伏如过山车，或为了保护自己而感到情感麻木。你很难维持一种稳定的中心感。", "负面自我评价：内心深处总觉得自己不够好，或者有强烈的羞耻感。这种受损让你难以接纳自己的价值。", "人际关系受损：难以信任他人，或在人群中倍感孤独。创伤筑起了围墙，保护了你也隔绝了连接。"];
+        
+        let currentStep = 0;
+        let scores = new Array(18).fill(null);
+        let radarChart = null;
+        let hoveredLabelIndex = -1;
+
+        function nextPage(pageId) {
+            document.querySelectorAll('.step-content').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function startQuestions() { nextPage('page-question'); initFootprints(); updateQuestion(); }
+
+        function initFootprints() {
+            const container = document.getElementById('footprint-container');
+            container.innerHTML = '<div class="footprint-dot-line"></div>';
+            for (let i = 0; i < 18; i++) {
+                const footprint = document.createElement('div');
+                footprint.className = 'footprint-item';
+                footprint.innerHTML = `<svg viewBox="0 0 24 24" class="w-4 h-5 fill-current"><path d="M12 2C10.5 2 9.5 3.5 9.5 5.5C9.5 7.5 10.5 9 12 9C13.5 9 14.5 7.5 14.5 5.5C14.5 3.5 13.5 2 12 2ZM12 12C10 12 8 13.5 8 16C8 18.5 10 21 12 21C14 21 16 18.5 16 16C16 13.5 14 12 12 12Z"/></svg>`;
+                container.appendChild(footprint);
+            }
+        }
+
+        function updateQuestion() {
+            const currentIdxElem = document.getElementById('current-q-index');
+            currentIdxElem.innerText = currentStep + 1;
+            document.getElementById('question-title').innerText = questions[currentStep];
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (scores[currentStep] !== null && parseInt(btn.dataset.value) === scores[currentStep]) btn.classList.add('active');
+            });
+            const footprints = document.querySelectorAll('.footprint-item');
+            footprints.forEach((fp, idx) => { if (idx <= currentStep) fp.classList.add('active'); else fp.classList.remove('active'); });
+            document.getElementById('prev-btn').style.visibility = (currentStep === 0) ? 'hidden' : 'visible';
+        }
+
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                scores[currentStep] = parseInt(this.dataset.value);
+                setTimeout(() => { if (currentStep < 17) { currentStep++; updateQuestion(); } else { generateReport(); } }, 300);
+            });
+        });
+
+        function prevQuestion() { if (currentStep > 0) { currentStep--; updateQuestion(); } }
+
+        function generateReport() {
+            const totalScore = scores.reduce((a, b) => a + b, 0);
+            document.getElementById('impact-index').innerText = Math.round((totalScore / 72) * 100) + '%';
+            const dims = [(scores[0] + scores[1]) / 8 * 100, (scores[2] + scores[3]) / 8 * 100, (scores[4] + scores[5]) / 8 * 100, (scores[9] + scores[10]) / 8 * 100, (scores[11] + scores[12]) / 8 * 100, (scores[13] + scores[14]) / 8 * 100];
+            
+            renderRadar(dims);
+
+            const statusDef = document.getElementById('status-definition');
+            const motto = document.getElementById('report-motto');
+            const conclusion = document.getElementById('conclusion-text');
+            
+            const buildHTML = (t, b) => `<p class="font-bold">${t}</p><p class="leading-relaxed">${b}</p>`;
+
+            if (totalScore <= 18) {
+                statusDef.innerText = "风暴后的坦然";
+                motto.innerText = "“那些不为人知的风暴在你的生命里刻下了痕迹，却没能磨损掉你那份温柔而坚定的边界。”";
+                conclusion.innerHTML = buildHTML(
+                    "测评结果显示，尽管你经历过那些令人心碎的时刻，但你的内在依然保留着惊人的自我修复能力。", 
+                    "这是一个非常值得庆祝的信号。这说明你的内心深处有一处坚实的“锚点”，让你在风暴中依然守住了自我的完整。虽然过往的影响偶尔还会像潮汐一样拍打你，但你已经拥有了在风浪中航行的能力。<br><br>请继续保持这种对生活的觉知和对自己的爱。那些经历没有把你击碎，反而磨砺出了你独有的生命质感。请为你这份强大的韧性感到骄傲，你走得每一步，都在向着光生长。"
+                );
+            } else if (totalScore <= 35) {
+                statusDef.innerText = "偶然有阵雨";
+                motto.innerText = "“那些过往的回响偶尔还在心头震荡，但你已不再是那个无助的孩子，你学会了在风雨中为自己撑伞。”";
+                conclusion.innerHTML = buildHTML(
+                    "测评结果显示，你的生活大体平稳，但在某些特定的时刻——或许是深夜的梦魇，或许是突如其来的情绪低落——那些旧日的阴影依然会试图拉扯你。", 
+                    "这并不是因为你不够好，也绝非你“想太多”，而是你的身心在温柔地提醒你：有些隐秘的角落还需要被光照亮。<br><br>请试着对自己多一点耐心。那些偶尔泛起的涟漪，正是深层疗愈发生的契机。你已经成功走出了最黑暗的森林，现在，你不需要再急着赶路。是时候停下来，温柔地清洗那些擦伤，告诉那个内心的小孩：“现在的我是安全的，我在这里陪着你。”"
+                );
+            } else if (totalScore <= 54) {
+                statusDef.innerText = "艰难的跋涉";
+                motto.innerText = "“你背负着隐形的行囊在漫长的黑夜里赶路，每一步的沉重，都见证了你对生活那一股不屈的倔强。”";
+                conclusion.innerHTML = buildHTML(
+                    "测评结果显示，过往的经历正在全方位地渗透你的当下。", 
+                    "请不要责怪自己的敏感、多疑或脆弱，这绝非性格的缺陷，而是你的神经系统还忠诚地停留在“战时状态”，替你抵挡着那些看不见的敌人。<br><br>你的身体太想保护你了，以至于它忘记了战争已经结束。那个曾独自抵挡千军万马的你，真的辛苦了。现在的你，值得被看见、被理解、被深深地拥抱。我们不需要立刻“变好”，只要试着卸下一点点防备，允许自己向外伸出手。请相信，求助不是示弱，而是另一种更高级的勇敢。"
+                );
+            } else {
+                statusDef.innerText = "幸存者的勋章";
+                motto.innerText = "“所有的震颤与不安，都是身体在替那个勇敢活下来的你，释放积压已久的余震。”";
+                conclusion.innerHTML = buildHTML(
+                    "测评结果显示，你目前的心理状态正处于一段高度应激的阶段。", 
+                    "请先深深地呼吸一次。看到这个结果，你可能会感到沉重，但请允许我告诉你：此刻的状态是你的大脑和身体在极端环境下，为了让你活下去而建立的一套“生存系统”，你不仅没有错，甚至是如此坚强的幸存者。<br><br>现在的那些痛苦——焦虑、自我怀疑、或是难以靠近他人，其实都是你曾经勇敢求生的勋章。只是现在环境安全了，这些“盔甲”变得有些沉重。这份报告是一张地图，它告诉我们哪里在痛，让我们一起来修复它。"
+                );
+            }
+            nextPage('page-report');
+        }
+
+        function renderRadar(data) {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            if (radarChart) radarChart.destroy();
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['  情绪闪回  ', '  回避行为  ', '  高度警觉  ', '情绪调节障碍', '负面自我评价', '人际关系受损'],
+                    datasets: [{
+                        data: data,
+                        backgroundColor: 'rgba(222, 149, 186, 0.25)',
+                        borderColor: '#DE95BA',
+                        pointBackgroundColor: '#DE95BA',
+                        borderWidth: 3,
+                        pointRadius: 2.5, 
+                        pointHoverRadius: 4 
+                    }]
+                },
+                options: {
+                    layout: { padding: { top: 30, bottom: 30, left: 60, right: 60 } },
+                    scales: { 
+                        r: { 
+                            beginAtZero: true, max: 100, ticks: { display: false },
+                            pointLabels: { 
+                                font: { family: "'Noto Serif SC'", size: 15, weight: '700' }, 
+                                color: (context) => (context.index === hoveredLabelIndex ? '#DE95BA' : '#718096'),
+                                padding: 15,
+                                showBackdrop: true,
+                                backdropColor: (context) => (context.index === hoveredLabelIndex ? '#fff9f5' : '#FFFFFF'),
+                                borderRadius: 12,
+                                backdropPadding: { x: 16, y: 12 },
+                                borderWidth: 1,
+                                borderColor: (context) => (context.index === hoveredLabelIndex ? '#DE95BA' : '#e2e8f0')
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' }, angleLines: { color: 'rgba(0,0,0,0.05)' }
+                        } 
+                    },
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    onHover: (event, elements) => {
+                        const canvas = event.chart.canvas;
+                        const centerX = (radarChart.chartArea.left + radarChart.chartArea.right) / 2;
+                        const centerY = (radarChart.chartArea.top + radarChart.chartArea.bottom) / 2;
+                        const dist = Math.sqrt(Math.pow(event.x - centerX, 2) + Math.pow(event.y - centerY, 2));
+                        if (dist > 85 && dist < 240) {
+                            let angle = Math.atan2(event.y - centerY, event.x - centerX) * 180 / Math.PI + 90;
+                            if (angle < 0) angle += 360;
+                            const idx = Math.round(angle / 60) % 6;
+                            if (hoveredLabelIndex !== idx) { hoveredLabelIndex = idx; canvas.style.cursor = 'pointer'; radarChart.update('none'); }
+                        } else if (hoveredLabelIndex !== -1) { hoveredLabelIndex = -1; canvas.style.cursor = 'default'; radarChart.update('none'); }
+                    },
+                    onClick: (e) => {
+                        const centerX = (radarChart.chartArea.left + radarChart.chartArea.right) / 2;
+                        const centerY = (radarChart.chartArea.top + radarChart.chartArea.bottom) / 2;
+                        let angle = Math.atan2(e.y - centerY, e.x - centerX) * 180 / Math.PI + 90;
+                        if (angle < 0) angle += 360;
+                        const idx = Math.round(angle / 60) % 6;
+                        explainDim(idx);
+                    }
+                }
+            });
+        }
+
+        function explainDim(idx) {
+            const explainer = document.getElementById('floating-explainer');
+            const content = document.getElementById('explainer-content');
+            const chartBox = document.getElementById('radar-chart-box');
+            chartBox.style.opacity = '0.15';
+            content.innerHTML = `<strong>${dimensionIntro[idx]}</strong>`;
+            explainer.style.display = 'block';
+        }
+
+        function resetRadar() {
+            const explainer = document.getElementById('floating-explainer');
+            const chartBox = document.getElementById('radar-chart-box');
+            explainer.style.display = 'none';
+            chartBox.style.opacity = '1';
+            hoveredLabelIndex = -1;
+            radarChart.update('none');
+        }
+        
+        window.addEventListener('click', function(e) {
+            const wrapper = document.getElementById('chart-wrapper');
+            const floating = document.getElementById('floating-explainer');
+            if (floating.style.display === 'block' && !wrapper.contains(e.target)) {
+                resetRadar();
+            }
+        });
+    </script>
+</body>
+</html>
