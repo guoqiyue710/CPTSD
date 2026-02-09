@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>溯源之旅 - 心理测评</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -26,16 +26,13 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            padding-left: constant(safe-area-inset-left);
-            padding-right: constant(safe-area-inset-right);
-            padding-top: constant(safe-area-inset-top);
-            padding-bottom: constant(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            -webkit-text-size-adjust: 100%;
+            font-size: 0.96rem;
+            line-height: 1.7;
         }
+
+        html { -webkit-text-size-adjust: 100%; }
+        #app { width: 100%; }
+        img { max-width: 100%; height: auto; }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.88);
@@ -53,11 +50,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h1, h2, h3, h4, h5 { font-family: var(--font-family); font-weight: 700; }
+        h1, h2, h3, h4, h5 { font-family: var(--font-family); font-weight: 700; line-height: 1.35; }
+        p { line-height: 1.65; }
 
         /* 首页标题设计 */
         .main-title {
-            font-size: 3rem;
+            font-size: 2.23rem;
             letter-spacing: 0.3em;
             font-weight: 900;
             color: #1a202c;
@@ -89,8 +87,112 @@
             font-weight: 400;
             border-radius: 15px;
         }
+        .option-btn:focus { outline: none; box-shadow: none; }
         .option-btn:hover { background-color: #fff9f5; border-color: var(--primary-color); transform: translateX(4px); }
         .option-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+        /* 题目页紧凑排版 */
+        #page-question #question-title { font-size: 1.08rem; line-height: 1.5; margin-bottom: 0.95rem; min-height: 3rem; }
+        #page-question #options-group { gap: 0.6rem; }
+        #page-question #options-group > * { margin-top: 0 !important; }
+        #page-question .option-btn { padding: 0.78rem 1rem; font-size: 0.88rem; border-radius: 0.95rem; }
+        #page-question .footprint-trail { height: 32px; margin-bottom: 0.6rem; }
+        #page-question .mt-16 { margin-top: 1.8rem; }
+        #page-question .mb-12 { margin-bottom: 1rem; }
+        #page-question .mb-8 { margin-bottom: 1rem; }
+
+        /* 发展建议之后文字风格（参考第一页，整体略缩小） */
+        #page-report .advice-content { color: #4a5568; }
+        #page-report .advice-content p:not(.text-xs):not(.text-sm):not(.text-[12px]) {
+            font-size: 0.84rem;
+            line-height: 1.6;
+            margin: 0 0 0.6rem 0;
+        }
+        #page-report .advice-content .text-lg { font-size: 0.9rem; line-height: 1.6; }
+        #page-report .advice-content .step-intro-box {
+            font-size: 0.84rem;
+            line-height: 1.6;
+            margin-bottom: 1.6rem;
+            padding: 1.1rem 1.35rem;
+            border-left-width: 3px;
+        }
+        #page-report .advice-content .step-intro-box .para-gap { display: block; height: 0.8rem; }
+        #page-report .advice-content .healing-path-card .text-[10px] { margin-bottom: 0.35rem; }
+        #page-report .advice-content .healing-path-card h4 { margin-bottom: 0.4rem; font-size: 1.05rem; }
+        #page-report .advice-content .healing-path-card p { margin-bottom: 0; line-height: 1.55; }
+        #page-report .advice-content > * + * { margin-top: 1.4rem; }
+        #page-report #report-details > * + * { margin-top: 1.4rem; }
+        #page-report .advice-content .text-lg.mb-12 { margin-bottom: 0.8rem; }
+        #page-report .advice-content .category-header { margin: 2rem 0 0.8rem; }
+        #page-report .advice-content .grid { gap: 0.9rem; }
+        #page-report .advice-content .grid.mb-16 { margin-bottom: 2rem; }
+        #page-report .advice-content .healing-path-card { margin-bottom: 0; }
+        #page-report section.advice-content { margin-top: 1.2rem !important; }
+
+        /* 首页紧凑排版 */
+        #page-home .home-copy { margin-bottom: 2rem; }
+        #page-home .home-title { margin-bottom: 2rem; }
+        #page-home .home-title p { font-size: 0.87rem; }
+        #page-home .home-footnote { margin-top: 2.5rem; padding-top: 1.5rem; font-size: 0.71rem; line-height: 1.5; }
+        #page-home .btn-primary { padding: 0.9rem 1rem; font-size: 0.92rem; }
+        #page-home .home-copy p { font-size: 0.78rem; line-height: 1.55; }
+        #page-home .home-copy p.text-lg { 
+            font-size: 0.84rem; 
+            position: relative; 
+            padding-left: 2rem; 
+            border-left: none;
+        }
+        #page-home .home-copy p.text-lg::before {
+            content: "";
+            position: absolute;
+            left: 0.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 2.6em;
+            background: #e8b5cd;
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+        #page-home .home-copy p.text-lg::after {
+            content: "“";
+            position: absolute;
+            left: 0.02rem;
+            top: -0.2rem;
+            font-size: 1.7rem;
+            line-height: 1;
+            color: #e8b5cd;
+            font-weight: 700;
+        }
+        @media (min-width: 641px) {
+            #page-home .home-copy p.text-lg::after { top: -0.4rem; }
+        }
+        #page-home .home-copy p.text-base { font-size: 0.78rem; }
+        @media (min-width: 641px) {
+            #page-home .home-copy p { font-size: 0.9rem; line-height: 1.6; }
+            #page-home .home-copy p.text-lg { font-size: 0.98rem; }
+            #page-home .home-copy p.text-base { font-size: 0.9rem; }
+            #page-home .home-title p { font-size: 0.98rem; }
+            #page-home .home-footnote { font-size: 0.78rem; }
+            #page-home .btn-primary { font-size: 1.05rem; padding: 1.05rem 1.4rem; }
+            .main-title { font-size: 2.8rem; }
+            .index-value { color: var(--primary-dark); font-style: italic; }
+        }
+
+        /* 第二页（指导语）文字紧凑 */
+        #page-instruction h2 { font-size: 1.35rem; margin-bottom: 1.4rem; }
+        #page-instruction .instruction-copy { font-size: 0.88rem; line-height: 1.75; margin-bottom: 1.4rem; }
+        #page-instruction .instruction-note { font-size: 0.82rem; line-height: 1.6; margin-bottom: 1.5rem; }
+        #page-instruction #trauma-text { font-size: 0.88rem; padding: 1.1rem; }
+        #page-instruction .btn-primary { font-size: 0.9rem; padding: 0.85rem 1rem; }
+
+        @media (min-width: 641px) {
+            #page-instruction h2 { font-size: 1.5rem; }
+            #page-instruction .instruction-copy { font-size: 0.95rem; line-height: 1.8; }
+            #page-instruction .instruction-note { font-size: 0.9rem; }
+            #page-instruction #trauma-text { font-size: 0.95rem; padding: 1.2rem; }
+            #page-instruction .btn-primary { font-size: 0.98rem; padding: 0.95rem 1.1rem; }
+        }
 
         /* 答题顶端进度指示器设计：粉色斜体大号 */
         .current-idx {
@@ -110,13 +212,13 @@
         /* 居中板块标题设计 */
         .section-big-header {
             position: relative;
-            height: 72px;
-            margin: 2.5rem 0 2rem;
+            height: 64px;
+            margin: 2.1rem 0 1.6rem;
         }
         .header-tag {
             background: var(--primary-color);
             color: white;
-            padding: 0.6rem 2rem;
+            padding: 0.35rem 1.8rem;
             border-radius: 1rem;
             font-weight: 900;
             font-size: 1.35rem;
@@ -127,6 +229,11 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 2.2rem;
         }
         .header-line {
             position: absolute;
@@ -147,7 +254,7 @@
             background: white;
             border: 2px solid var(--primary-light);
             border-radius: 2.5rem;
-            padding: 1.75rem 2.5rem;
+            padding: 1.35rem 2.1rem;
             margin-bottom: 0.75rem;
             box-shadow: 0 10px 30px rgba(222, 149, 186, 0.05);
             flex-wrap: wrap;
@@ -155,44 +262,45 @@
         }
         .index-display { display: flex; flex-direction: column; align-items: flex-start; }
         .index-label { font-size: 0.875rem; font-weight: 800; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
-        .index-value { font-size: 3.5rem; font-weight: 950; color: var(--primary-color); line-height: 1; }
+        .index-value { font-size: 3.1rem; font-weight: 950; color: var(--primary-color); line-height: 1; }
         .status-display {
             text-align: right; border-left: 2px solid #f7fafc; padding-left: 2rem;
             display: flex; flex-direction: column; justify-content: center; flex: 1;
         }
-        .status-name { font-size: 1.85rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.25rem; }
-        .status-desc { font-size: 0.85rem; color: #718096; font-style: italic; opacity: 0.8; }
+        .status-name { font-size: 1.65rem; font-weight: 900; color: var(--primary-dark); margin-bottom: 0.2rem; }
+        .status-desc { font-size: 0.8rem; color: #718096; font-style: italic; opacity: 0.8; }
 
         /* STEP 样式 */
         .step-title-wrapper { position: relative; margin-bottom: 1.5rem; display: flex; align-items: center; }
         .step-number-bg {
             font-size: 3.5rem; font-weight: 900; color: var(--primary-color); opacity: 0.12;
-            position: absolute; left: -0.8rem; top: -1.4rem; font-style: italic; user-select: none;
+            position: absolute; left: -0.8rem; top: -2.2rem; font-style: italic; user-select: none;
         }
         .step-title-text {
-            font-size: 1.6rem; font-weight: 800; color: #1a202c; position: relative;
-            padding-left: 0.6rem; border-left: 5px solid var(--primary-color); letter-spacing: 0.02em;
+            font-size: 1.45rem; font-weight: 800; color: #1a202c; position: relative;
+            padding-left: 0.6rem; letter-spacing: 0.02em; line-height: 1.1;
         }
         
         /* 具有设计感的文字板块 - STEP 1-3 引导文字统一设定为 0.95rem */
         .step-intro-box {
             background: linear-gradient(to right, #fffcfb, white);
-            border-left: 4px solid var(--primary-color);
-            padding: 2.25rem;
+            border-left: 3px solid var(--primary-color);
+            padding: 1.85rem;
             border-radius: 0 1.5rem 1.5rem 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            margin-bottom: 3rem;
+            margin-bottom: 2.4rem;
             color: #4a5568;
             line-height: 1.9;
             font-weight: 500;
-            font-size: 0.95rem; 
+            font-size: 0.92rem; 
         }
 
         .content-card {
-            background: white; padding: 1.5rem; border-radius: 1.5rem; border: 1px solid #f1f5f9;
+            background: white; padding: 1.05rem; border-radius: 1.15rem; border: 1px solid #f1f5f9;
             box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s ease; height: 100%;
             position: relative; overflow: hidden;
         }
+        .content-card p { line-height: 1.45; }
         .content-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(222, 149, 186, 0.08); }
 
         .card-number {
@@ -204,33 +312,41 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            margin: 3.5rem 0 1.5rem;
+            margin: 2.8rem 0 1.2rem;
             padding-left: 0.5rem;
         }
         .category-tag {
             font-size: 0.75rem;
             font-weight: 800;
-            padding: 0.25rem 0.75rem;
+            padding: 0.15rem 0.6rem;
             border-radius: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            height: 1.25rem;
         }
         .category-title {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             font-weight: 800;
             color: #2d3748;
         }
 
         .healing-path-card {
-            background: white; border-radius: 20px; padding: 2rem; border: 1px solid #f1f5f9;
+            background: white; border-radius: 16px; padding: 1.2rem; border: 1px solid #f1f5f9;
             box-shadow: 0 4px 18px rgba(0,0,0,0.03); position: relative; overflow: hidden;
         }
         .healing-path-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary-color), var(--bg-accent)); }
 
         /* 雷达图与释义交互设计 */
-        .chart-wrapper { position: relative; margin: 0 auto; max-width: 600px; }
-        .chart-box { position: relative; margin: 0 auto; width: 100%; transition: opacity 0.12s ease-out; }
-        #radar-chart-box { will-change: opacity; }
+        .chart-wrapper { position: relative; margin: 0 auto; max-width: 620px; text-align: center; }
+        @media (min-width: 641px) {
+            .chart-wrapper { max-width: 640px; }
+            .chart-wrapper { margin-top: -38px; }
+        }
+        .chart-box { position: relative; margin: 0 auto; width: 100%; max-width: 680px; transition: opacity 0.4s ease; }
+        #radarChart { display: inline-block; width: 100%; height: auto; }
         .floating-explainer {
             position: absolute;
             top: 50%;
@@ -255,12 +371,11 @@
             display: flex; align-items: center; justify-content: center; font-size: 12px;
             cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        canvas#radarChart { max-width: 100%; max-height: 420px !important; height: auto !important; }
 
         /* 测评结果反馈文字字号统一：设为 1.05rem (比 0.95rem 的引导文字大一号) */
         #conclusion-text {
-            font-size: 1.05rem; 
-            line-height: 1.9;
+            font-size: 0.9rem; 
+            line-height: 1.6;
         }
 
         /* 付费锁设计 */
@@ -270,30 +385,33 @@
             -webkit-backdrop-filter: blur(12px);
             border: 2px solid var(--primary-light);
             border-radius: 1.5rem;
-            padding: 2.5rem 1.5rem;
+            padding: 1.6rem 1.2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             box-shadow: 0 4px 15px rgba(222, 149, 186, 0.05);
-            margin-top: -1.5rem;
+            margin-top: -0.6rem;
             position: relative;
             z-index: 2;
         }
+        .lock-card-compact h4 { font-size: 1.35rem; margin-bottom: 0.35rem; }
+        .lock-card-compact p { font-size: 0.78rem; line-height: 1.45; margin-bottom: 0.6rem; }
+        .lock-card-compact .btn-unlock { font-size: 0.86rem; }
 
         /* 咨询师板块 */
         .consultant-container {
-            margin: 3rem 0 0; width: 100%; padding: 1.5rem 2rem;
+            margin: 1.8rem 0 0; width: 100%; padding: 1.1rem 1.5rem;
             background: linear-gradient(135deg, #fffcfb 0%, var(--bg-accent) 100%);
             border-radius: 2rem; border: 1px solid rgba(222, 149, 186, 0.15);
             position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center;
         }
         .consultant-text-msg {
-            font-size: 0.9rem; font-weight: 600; color: #4a5568; margin-bottom: 0.75rem;
+            font-size: 0.78rem; font-weight: 600; color: #4a5568; margin-bottom: 0.6rem;
             z-index: 1; letter-spacing: 0.01em; line-height: 1.4;
         }
         .btn-consultant {
             background: white; color: var(--primary-dark); border: 1.5px solid var(--primary-color);
-            padding: 0.6rem 1.85rem; border-radius: 0.85rem; font-weight: 700; font-size: 0.85rem;
+            padding: 0.55rem 1.7rem; border-radius: 0.85rem; font-weight: 700; font-size: 0.8rem;
             transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
         }
 
@@ -331,6 +449,10 @@
             margin-top: -35px; 
             margin-bottom: 30px;
         }
+        @media (min-width: 641px) {
+            .report-summary-box { margin-bottom: 0.4rem; }
+            .radar-tip-container { margin-top: -66px; margin-bottom: 0; }
+        }
         .radar-tip-line-left { 
             height: 1px; 
             width: 35px; 
@@ -356,25 +478,15 @@
             padding: 20px;
             border-radius: 2rem;
         }
-        /* 导出一致性：禁用过渡与动画，确保截图与页面一致 */
-        .capture-mode, .capture-mode * {
-            transition: none !important;
-            animation: none !important;
-            filter: none !important;
-            -webkit-text-size-adjust: 100% !important;
-            -webkit-font-smoothing: antialiased !important;
-        }
-        /* 导出一致性：隐藏结论卡片中的装饰层，避免覆盖文本 */
-        .capture-mode .p-10 .absolute { display: none !important; }
 
         /* 新按钮样式设计 */
         .btn-action-outline {
             border: 2px solid #e2e8f0;
             color: #718096;
-            padding: 0.85rem 1.75rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 1rem;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
@@ -391,10 +503,10 @@
         .btn-action-solid {
             background: linear-gradient(135deg, var(--primary-color), #f1b2d3);
             color: white;
-            padding: 0.85rem 1.75rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 1rem;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
@@ -458,144 +570,179 @@
         .redeem-error { color: #e53e3e; font-size: 0.85rem; margin-top: 0.5rem; min-height: 1rem; text-align: center; }
         
         @media (max-width: 640px) {
-            #app { padding: 1rem; }
-            #page-report #report-capture-area { padding: 12px; }
-            #page-report .p-10 { padding: 1.25rem; }
-            #page-home .text-lg { font-size: 0.92rem; line-height: 1.75; }
-            #page-home .text-base { font-size: 0.86rem; line-height: 1.75; }
-            #page-home .btn-primary { padding: 0.6rem 1rem; font-size: 0.95rem; }
-            .decor-ball-1, .decor-ball-2 { display: none; }
-            #page-home .mb-12 { margin-bottom: 0.75rem !important; }
-            #page-home .mt-16 { margin-top: 0.75rem !important; }
-            #page-home .pt-8 { padding-top: 0.5rem !important; }
-            .main-title { font-size: 1.8rem; letter-spacing: 0.1em; }
-            .title-underline { margin: 0.5rem auto 1rem; width: 64px; }
+            body { align-items: stretch; padding-bottom: calc(env(safe-area-inset-bottom) + 12px); }
+            #app { border-radius: 1.5rem; padding: 1.15rem; }
+            .main-title { font-size: 2.04rem; letter-spacing: 0.14em; }
+            .title-underline { margin: 0.6rem auto 1.6rem; }
             .section-big-header { height: 56px; margin: 2rem 0 1.5rem; }
             .header-tag { font-size: 1.1rem; padding: 0.5rem 1.25rem; letter-spacing: 0.08em; }
-            .header-line { width: 25%; }
-            .report-summary-box { padding: 0.9rem 1rem; border-radius: 1.25rem; gap: 0.75rem; flex-wrap: nowrap; align-items: center; }
-            #page-report .index-display { width: 36%; justify-content: center; align-items: center; text-align: center; }
-            #page-report .status-display { width: 64%; text-align: left; border-left: none; padding-left: 0; }
-            .index-label { max-width: none; width: 100%; display: block; line-height: 1.25; text-align: center; }
-            .index-value { font-size: 1.4rem; text-align: center; line-height: 1.2; }
-            .status-name { font-size: 1.5rem; }
-            .status-display { padding-left: 1rem; }
-            .step-title-wrapper { margin-bottom: 1rem; }
-            .step-title-text { font-size: 1.1rem; border-left-width: 4px; }
-            .step-intro-box { padding: 0.8rem; margin-bottom: 1rem; font-size: 0.85rem; line-height: 1.7; }
-            #page-report .mt-16 { margin-top: 0.75rem !important; }
-            #page-report .pb-8 { padding-bottom: 0.75rem !important; }
-            #question-title { font-size: 1.2rem; min-height: 3.6rem; margin-bottom: 0.75rem; }
-            .option-btn { padding: 1rem 1rem; font-size: 1rem; border-radius: 0.9rem; line-height: 1.5; }
-            .content-card h4 { font-size: 1rem; }
-            .content-card p { font-size: 0.88rem; line-height: 1.7; }
+            .header-line { width: 28%; }
+            .report-summary-box { padding: 0.9rem 1.1rem; border-radius: 1.5rem; gap: 0.6rem; flex-direction: column; align-items: flex-start; }
+            .index-display { flex-direction: row; align-items: center; gap: 0.5rem; }
+            .index-label { font-size: 1.05rem; margin-bottom: 0; }
+            .index-value { font-size: 1.15rem; font-style: italic; color: var(--primary-dark); }
+            .status-name { font-size: 0.98rem; }
+            .status-display { padding-left: 0; border-left: none; text-align: left; }
+            .step-title-text { font-size: 1.1rem; border-left: none; padding-left: 0; }
+            .step-intro-box { padding: 1.25rem; margin-bottom: 1.75rem; font-size: 0.95rem; line-height: 1.85; border-left: 3px solid var(--primary-color); }
+            #question-title { font-size: 1.25rem; min-height: 4.8rem; margin-bottom: 1rem; }
+            .option-btn { padding: 0.9rem 1rem; font-size: 0.95rem; border-radius: 0.9rem; }
             .inquiry-label { font-size: 0.65rem; letter-spacing: 0.12em; }
             .chart-wrapper { max-width: 100%; }
             .floating-explainer { width: 92%; padding: 1rem; }
-            .floating-explainer { backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 8px 16px rgba(222,149,186,0.12); animation: none; border: 1px solid #f1f5f9; }
-            .consultant-container { padding: 1rem; border-radius: 1.5rem; }
-            .btn-consultant { padding: 0.5rem 1.25rem; font-size: 0.8rem; }
-            .lock-card-compact { padding: 1.75rem 1.25rem; }
-            canvas#radarChart { max-height: 320px !important; }
-            #page-report .lock-card-compact > div:first-child { display: none; }
-            /* STEP3 内的“解锁自我疗愈指南”与“寻找心理咨询师”收窄、扁平化 */
-            #page-report .lock-card-compact { max-width: 95%; margin: 0.7rem auto 0; padding: 1.15rem 0.95rem; }
-            #page-report .lock-card-compact h4 { font-size: 0.95rem; margin-bottom: 0.35rem; }
-            #page-report .lock-card-compact p { font-size: 0.74rem; line-height: 1.6; margin-bottom: 0.85rem; padding: 0; }
-            #page-report .btn-unlock { padding: 0.62rem 1rem; font-size: 0.86rem; border-radius: 0.9rem; }
-            #page-report .consultant-container { max-width: 95%; margin: 0.55rem auto 0; padding: 0.75rem; border-radius: 1.2rem; }
-            /* STEP3 标题容器与引导块同宽居中，保证竖线完全对齐 */
-            #page-report section.pb-8.mt-16 .step-title-wrapper { max-width: 94%; margin: 0 auto 1rem; }
-            #page-report section.pb-8.mt-16 .step-title-text { margin-left: 0; }
-            #page-report .consultant-text-msg { font-size: 0.8rem; }
-            #page-report .btn-consultant { padding: 0.58rem 0.95rem; font-size: 0.86rem; border-radius: 0.9rem; }
-            .footprint-item:nth-child(even) { margin-top: -6px; transform: rotate(-8deg); }
-            .footprint-item:nth-child(odd) { margin-top: 6px; transform: rotate(8deg); }
-            #page-report .text-lg { font-size: 0.95rem !important; }
-            #page-report .text-base { font-size: 0.88rem !important; }
-            #page-report .text-sm { font-size: 0.78rem !important; }
-            #page-report #conclusion-text { font-size: 0.88rem; line-height: 1.75; }
-            #page-report .category-title { font-size: 0.95rem; }
-            #page-report .status-name { font-size: 1.2rem; }
-            #page-report .index-value { font-size: 1.4rem; }
-            #page-report .btn-action-outline, 
-            #page-report .btn-action-solid { font-size: 0.78rem; padding: 0.7rem 1.1rem; }
-            #page-report .content-card { padding: 0.85rem; }
-            #page-report .content-card h4 { font-size: 0.92rem; }
-            #page-report .content-card p { font-size: 0.82rem; line-height: 1.65; }
-            #report-details .text-base { font-size: 0.84rem !important; }
-            #report-details .text-sm { font-size: 0.74rem !important; }
-            #report-details .text-xs { font-size: 0.7rem !important; }
-            #report-details .grid { gap: 0.6rem !important; }
-            #report-details { max-width: 95%; margin: 0 auto; }
-            #page-report .gap-5 { gap: 0.9rem; }
-            #page-report .rounded-\[2\.5rem\] { border-radius: 1.75rem; }
-            #page-report .section-big-header { margin: 1.6rem 0 1.2rem; }
-            #page-report .step-intro-box { padding: 0.8rem; }
-            /* 仅收窄 STEP3 及其后的引导文字块 */
-            #page-report section.pb-8.mt-16 .step-intro-box { max-width: 94%; margin: 0 auto; }
-            #page-report .category-header { margin: 2rem 0 1rem; }
-            /* 结论卡片装饰避免遮挡文字 */
-            #page-report .p-10 .absolute { z-index: 0; pointer-events: none; }
-            #page-report #conclusion-text { position: relative; z-index: 1; }
-            /* STEP3 内的“解锁自我疗愈指南”与“寻找心理咨询师”在超小屏进一步收窄、扁平化 */
-            #page-report .lock-card-compact { max-width: 94%; margin: 0.55rem auto 0; padding: 1rem 0.85rem; }
-            #page-report .lock-card-compact h4 { font-size: 0.9rem; margin-bottom: 0.3rem; }
-            #page-report .lock-card-compact p { font-size: 0.7rem; line-height: 1.55; margin-bottom: 0.7rem; }
-            #page-report .btn-unlock { padding: 0.58rem 0.9rem; font-size: 0.8rem; border-radius: 0.85rem; }
-            #page-report .consultant-container { max-width: 94%; margin: 0.45rem auto 0; padding: 0.7rem; border-radius: 1.15rem; }
-            /* 超小屏同宽居中，竖线完全对齐 */
-            #page-report section.pb-8.mt-16 .step-title-wrapper { max-width: 94%; margin: 0 auto 0.9rem; }
-            #page-report section.pb-8.mt-16 .step-title-text { margin-left: 0; }
-            #page-report .consultant-text-msg { font-size: 0.78rem; }
-            #page-report .btn-consultant { padding: 0.48rem 0.85rem; font-size: 0.8rem; border-radius: 0.85rem; }
-            #page-report .lock-card-compact > div:first-child { display: none; }
+            .consultant-container { padding: 0.85rem 1rem; border-radius: 1.5rem; margin-top: 1.1rem; }
+            .btn-consultant { padding: 0.48rem 1.2rem; font-size: 0.75rem; }
+            .lock-card-compact { padding: 0.9rem 0.95rem; margin-top: -0.4rem; }
+            .lock-card-compact h4 { font-size: 1.25rem; }
+            .lock-card-compact p { font-size: 0.74rem; line-height: 1.45; }
+            .lock-card-compact .btn-unlock { font-size: 0.78rem; }
+            .lock-card-compact .btn-unlock { padding: 0.7rem 1.2rem; }
+            #report-capture-area { padding: 12px; border-radius: 1.5rem; }
+            .footprint-trail { height: 34px; }
+            #footprint-container svg { width: 14px; height: 18px; }
+            .btn-primary { width: 100%; }
+            .btn-action-outline, .btn-action-solid { width: 100%; }
+            .btn-action-outline { font-size: 0.72rem; padding: 0.62rem 0.85rem; }
+            .btn-action-solid { font-size: 0.72rem; padding: 0.62rem 0.85rem; }
+            #page-home .home-copy { margin-bottom: 1.4rem; }
+            #page-home .home-copy p { font-size: 0.75rem; line-height: 1.52; }
+            #page-home .home-copy p.text-lg { font-size: 0.8rem; }
+            #page-home .home-copy p.text-base { font-size: 0.75rem; }
+            #page-home .home-title { margin-bottom: 1rem; }
+            #page-home .home-title p { font-size: 0.84rem; line-height: 1.45; }
+            #page-home .home-footnote { margin-top: 1.6rem; padding-top: 1rem; font-size: 0.67rem; line-height: 1.5; }
+            #page-home .btn-primary { padding: 0.78rem 0.9rem; font-size: 0.86rem; }
+            #page-instruction h2 { font-size: 1.2rem; margin-bottom: 1.1rem; }
+            #page-instruction .instruction-copy { font-size: 0.78rem; line-height: 1.65; margin-bottom: 1.1rem; }
+            #page-instruction .instruction-note { font-size: 0.74rem; line-height: 1.55; margin-bottom: 1.1rem; }
+            #page-instruction #trauma-text { font-size: 0.8rem; padding: 0.95rem; }
+            #page-instruction .btn-primary { font-size: 0.85rem; padding: 0.78rem 0.9rem; }
+            #page-question #question-title { font-size: 1rem; line-height: 1.4; margin-bottom: 0.8rem; min-height: 2.6rem; }
+            #page-question #options-group { gap: 0.42rem; }
+            #page-question .option-btn { padding: 0.62rem 0.8rem; font-size: 0.8rem; }
+            #page-question .footprint-trail { height: 26px; }
+            #page-question .mt-16 { margin-top: 0.9rem; }
+            #page-question .mb-12 { margin-bottom: 0.9375rem; }
+            #page-question .mb-8 { margin-bottom: 0.9375rem; }
+            #page-report .section-big-header { margin: 1.2rem 0 0.8rem; }
+            #page-report .report-summary-box { margin-bottom: 0.35rem; }
+            #page-report .chart-wrapper { margin-top: -40px; }
+            #page-report #radarChart { height: 360px !important; }
+            #page-report .chart-box { display: flex; justify-content: center; }
+            #page-report .radar-tip-container { margin-top: -58px; margin-bottom: 2px; }
+            #page-report .radar-tip-text { font-size: 10px; text-align: center; }
+            #conclusion-text { font-size: 0.82rem; line-height: 1.5; }
+            #page-report .floating-explainer { font-size: 11px; line-height: 1.45; padding: 0.85rem; }
+            #page-report .close-explainer { width: 22px; height: 22px; font-size: 11px; top: -8px; right: -8px; }
+            .category-title { font-size: 1rem; }
         }
-        @media (max-width: 380px) {
-            #page-home .text-lg { font-size: 0.88rem; line-height: 1.7; }
-            #page-home .text-base { font-size: 0.84rem; line-height: 1.7; }
-            #page-home .btn-primary { padding: 0.55rem 0.9rem; font-size: 0.9rem; }
-            .main-title { font-size: 1.7rem; letter-spacing: 0.08em; }
-            .title-underline { margin: 0.4rem auto 0.8rem; width: 56px; }
-            .section-big-header { height: 50px; margin: 1.5rem 0 1.25rem; }
-            .header-tag { font-size: 1rem; padding: 0.45rem 1rem; }
-            #question-title { font-size: 1.05rem; min-height: 3.2rem; }
-            .option-btn { padding: 0.9rem 0.9rem; font-size: 0.95rem; border-radius: 0.8rem; }
-            .report-summary-box { padding: 0.9rem; gap: 0.8rem; }
-            .index-value { font-size: 1.3rem; }
-            .status-name { font-size: 1.6rem; }
-            .btn-action-outline, .btn-action-solid { padding: 0.75rem 1.25rem; font-size: 0.8rem; }
-            .lock-card-compact { padding: 1.5rem 1rem; }
-            .content-card p { font-size: 0.85rem; }
-            canvas#radarChart { max-height: 280px !important; }
-            #page-report .text-lg { font-size: 0.9rem !important; }
-            #page-report .text-base { font-size: 0.85rem !important; }
-            #page-report .text-sm { font-size: 0.76rem !important; }
-            .step-title-wrapper { margin-bottom: 0.9rem; }
-            #page-report .mt-16 { margin-top: 0.6rem !important; }
-            #page-report .pb-8 { padding-bottom: 0.6rem !important; }
-            #page-report #conclusion-text { font-size: 0.86rem; }
-            #page-report .category-title { font-size: 0.9rem; }
-            #page-report .index-value { font-size: 1.3rem; }
-            #page-report .content-card h4 { font-size: 0.86rem; }
-            #page-report .content-card p { font-size: 0.76rem; }
-            #report-details .text-base { font-size: 0.82rem !important; }
-            #report-details .text-sm { font-size: 0.72rem !important; }
-            #report-details .text-xs { font-size: 0.68rem !important; }
-            #report-details .grid { gap: 0.5rem !important; }
-            #report-details { max-width: 94%; margin: 0 auto; }
-            #page-report #report-capture-area { padding: 10px; }
-            #page-report .p-10 { padding: 1rem; }
-            #page-report .gap-5 { gap: 0.8rem; }
-            #page-report .rounded-\[2\.5rem\] { border-radius: 1.5rem; }
-            #page-report .section-big-header { margin: 1.4rem 0 1rem; }
-            #page-report .step-intro-box { padding: 0.8rem; }
-            /* 仅收窄 STEP3 及其后的引导文字块（超小屏） */
-            #page-report section.pb-8.mt-16 .step-intro-box { max-width: 92%; margin: 0 auto; }
-            #page-report .category-header { margin: 1.6rem 0 0.9rem; }
-            /* 结论卡片装饰避免遮挡文字（超小屏） */
-            #page-report .p-10 .absolute { z-index: 0; pointer-events: none; }
-            #page-report #conclusion-text { position: relative; z-index: 1; }
+
+        @media (max-width: 480px) {
+            .main-title { font-size: 1.85rem; letter-spacing: 0.12em; }
+            .title-underline { margin: 0.5rem auto 1.3rem; }
+            .step-intro-box { padding: 1.05rem; font-size: 0.92rem; }
+            #question-title { font-size: 1.15rem; min-height: 4.2rem; }
+            .option-btn { padding: 0.85rem 0.9rem; font-size: 0.92rem; }
+            .report-summary-box { padding: 1rem; }
+            .index-value { font-size: 2.25rem; }
+            .status-name { font-size: 1.15rem; }
+            .btn-primary { font-size: 0.95rem; padding: 0.9rem 1rem; }
+            .btn-action-outline, .btn-action-solid { font-size: 0.82rem; padding: 0.75rem 1rem; }
+            .redeem-card { padding: 1.2rem; }
+            #page-home .home-copy p { font-size: 0.72rem; line-height: 1.5; }
+            #page-home .home-copy p.text-lg { font-size: 0.77rem; }
+            #page-home .home-title p { font-size: 0.82rem; line-height: 1.42; }
+            #page-home .home-footnote { font-size: 0.65rem; }
+            #page-home .btn-primary { padding: 0.74rem 0.85rem; font-size: 0.84rem; }
+            #page-instruction h2 { font-size: 1.12rem; }
+            #page-instruction .instruction-copy { font-size: 0.75rem; line-height: 1.6; }
+            #page-instruction .instruction-note { font-size: 0.72rem; line-height: 1.5; }
+            #page-instruction #trauma-text { font-size: 0.78rem; padding: 0.9rem; }
+            #page-instruction .btn-primary { font-size: 0.83rem; padding: 0.74rem 0.85rem; }
+            #page-question #question-title { font-size: 0.96rem; min-height: 2.4rem; }
+            #page-question #options-group { gap: 0.38rem; }
+            #page-question .option-btn { padding: 0.58rem 0.75rem; font-size: 0.78rem; }
+            #page-question .footprint-trail { height: 24px; }
+            #page-question .mt-16 { margin-top: 0.75rem; }
+            #page-question .mb-12 { margin-bottom: 0.9375rem; }
+            #page-question .mb-8 { margin-bottom: 0.9375rem; }
+            #page-report #radarChart { height: 340px !important; }
+            #page-report .radar-tip-container { margin-top: -52px; margin-bottom: 3px; }
+            #page-report .radar-tip-text { font-size: 10px; text-align: center; }
+            #conclusion-text { font-size: 0.8rem; line-height: 1.45; }
+            #page-report .floating-explainer { font-size: 11px; line-height: 1.4; padding: 0.8rem; }
+            #page-report .close-explainer { width: 20px; height: 20px; font-size: 10px; top: -7px; right: -7px; }
+            .category-title { font-size: 0.96rem; }
+        }
+
+        @media (max-width: 390px) {
+            #app { border-radius: 1.25rem; padding: 1rem; }
+            .main-title { font-size: 1.66rem; letter-spacing: 0.1em; }
+            .step-title-text { font-size: 1.15rem; }
+            .index-label { font-size: 0.78rem; }
+            .status-desc { font-size: 0.78rem; }
+            #page-home .home-copy p { font-size: 0.69rem; line-height: 1.48; }
+            #page-home .home-copy p.text-lg { font-size: 0.74rem; }
+            #page-home .home-title p { font-size: 0.78rem; line-height: 1.4; }
+            #page-home .home-footnote { font-size: 0.63rem; }
+            #page-home .btn-primary { padding: 0.7rem 0.8rem; font-size: 0.82rem; }
+            #page-instruction h2 { font-size: 1.05rem; }
+            #page-instruction .instruction-copy { font-size: 0.72rem; line-height: 1.55; }
+            #page-instruction .instruction-note { font-size: 0.7rem; line-height: 1.45; }
+            #page-instruction #trauma-text { font-size: 0.76rem; padding: 0.85rem; }
+            #page-instruction .btn-primary { font-size: 0.81rem; padding: 0.7rem 0.8rem; }
+            #page-question #question-title { font-size: 0.92rem; min-height: 2.2rem; }
+            #page-question #options-group { gap: 0.35rem; }
+            #page-question .option-btn { padding: 0.54rem 0.7rem; font-size: 0.76rem; }
+            #page-question .footprint-trail { height: 22px; }
+            #page-question .mt-16 { margin-top: 0.7rem; }
+            #page-question .mb-12 { margin-bottom: 0.9375rem; }
+            #page-question .mb-8 { margin-bottom: 0.9375rem; }
+            #page-report #radarChart { height: 320px !important; }
+            #page-report .radar-tip-container { margin-top: -48px; margin-bottom: 3px; }
+            #page-report .radar-tip-text { font-size: 10px; text-align: center; }
+            #conclusion-text { font-size: 0.78rem; line-height: 1.4; }
+            #page-report .floating-explainer { font-size: 11px; line-height: 1.35; padding: 0.75rem; }
+            #page-report .close-explainer { width: 20px; height: 20px; font-size: 10px; top: -6px; right: -6px; }
+            .category-title { font-size: 0.92rem; }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            body { align-items: flex-start; }
+            #app { padding: 1rem; border-radius: 1.25rem; }
+            .main-title { font-size: 1.62rem; letter-spacing: 0.1em; }
+            .section-big-header { margin: 1.5rem 0 1rem; height: 48px; }
+            .step-intro-box { padding: 1rem; margin-bottom: 1.25rem; }
+            #question-title { min-height: 0; margin-bottom: 0.75rem; font-size: 1.1rem; }
+            .footprint-trail { height: 30px; }
+            .option-btn { padding: 0.75rem 0.9rem; font-size: 0.9rem; }
+            #page-home .home-copy p { font-size: 0.71rem; line-height: 1.48; }
+            #page-home .home-title p { font-size: 0.82rem; }
+            #page-home .home-footnote { font-size: 0.63rem; }
+            #page-home .btn-primary { padding: 0.7rem 0.85rem; font-size: 0.82rem; }
+            #page-instruction h2 { font-size: 1.05rem; }
+            #page-instruction .instruction-copy { font-size: 0.72rem; line-height: 1.5; }
+            #page-instruction .instruction-note { font-size: 0.7rem; line-height: 1.45; }
+            #page-instruction #trauma-text { font-size: 0.76rem; padding: 0.85rem; }
+            #page-instruction .btn-primary { font-size: 0.81rem; padding: 0.7rem 0.85rem; }
+            #page-question #question-title { font-size: 0.9rem; min-height: 0; margin-bottom: 0.6rem; }
+            #page-question #options-group { gap: 0.32rem; }
+            #page-question .option-btn { padding: 0.5rem 0.7rem; font-size: 0.74rem; }
+            #page-question .footprint-trail { height: 20px; }
+            #page-question .mt-16 { margin-top: 0.6rem; }
+            #page-question .mb-12 { margin-bottom: 0.4rem; }
+            #page-question .mb-8 { margin-bottom: 0.4rem; }
+        }
+
+        /* 导出报告：强制桌面端排版 */
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
     </style>
 </head>
@@ -622,15 +769,15 @@
         <!-- 页面 1: 首页 -->
         <div id="page-home" class="step-content active fade-in">
             <div class="mb-6">
-                <div class="space-y-5 text-gray-600 leading-relaxed mb-12 text-justify">
-                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">“为什么别人无意间的一句话就会让你突然产生强烈的窒息感？”</p>
-                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">“为什么父母随口的一句评价，就能让你瞬间掉进自我怀疑的深渊？”</p>
-                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">“为什么在亲密关系里明明对方没有做错什么，你却时刻焦虑，总觉得这段感情随时会崩塌？”</p>
+                <div class="home-copy space-y-5 text-gray-600 leading-relaxed mb-12 text-justify">
+                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">为什么别人无意间的一句话就会让你突然产生强烈的窒息感？</p>
+                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">为什么父母随口的一句评价，就能让你瞬间掉进自我怀疑的深渊？</p>
+                    <p class="text-lg text-gray-800 border-l-4 border-[#f5dae8] pl-4 font-semibold italic">为什么在亲密关系里明明对方没有做错什么，你却时刻焦虑，总觉得这段感情随时会崩塌？</p>
                     <p class="pt-2 text-base font-medium text-gray-700">我们已经成年，但在那个人面前却瞬间缩回成那个无助的孩子；如果那个被称为“家”的地方，让你感到的不是松弛而是戒备；如果那段本该滋养你的爱情，却成了你反复确认自己“是否值得被爱”的考场；如果每一次深情，都像是在完成一场耗尽元气的演出……</p>
                     <p class="text-base font-medium text-gray-700">别急着责怪自己，那是你的身体在替你记得那些被大脑刻意遗忘的创伤。如果你觉得生活总是在“生存”而非“生活”，如果你感到的痛苦总是难以名状，请花几分钟走进这个专业的测评。听听那些留在你身体里的“生存回响”。</p>
                     <p class="text-base font-medium text-gray-700">这一次，我们不谈原谅，只谈疗愈。</p>
                 </div>
-                <div class="mb-12 text-center">
+                <div class="home-title mb-12 text-center">
                     <h1 class="main-title">溯源之旅</h1>
                     <div class="title-underline"></div>
                     <p class="text-lg text-gray-500 font-light italic text-center">这是一次关于自我的温柔观测，让我们潜入记忆的深处，完成一次溯源之旅。</p>
@@ -640,7 +787,7 @@
                 </div>
             </div>
             <!-- 第一页最下方的文本 -->
-            <div class="mt-16 pt-8 border-t border-gray-100 text-[12px] text-gray-400 text-justify leading-6 font-light">
+                <div class="home-footnote mt-16 pt-8 border-t border-gray-100 text-[12px] text-gray-400 text-justify leading-6 font-light">
                 <p>本测评基于ICD-11国际诊断标准，结合了国际创伤问卷（ITQ） 量表设计进行开发，结果仅供自我探索与参考，不作为医学诊断依据。如需确诊或进行针对性治疗，请寻求精神科医生或临床心理学专家的专业帮助。</p>
                 <p class="mt-3">发展建议部分主要参考皮特·沃克（Pete Walker）的著作——《不原谅也没关系》（Complex PTSD: From Surviving to Thriving）。</p>
             </div>
@@ -653,11 +800,11 @@
                 <div class="h-[1px] flex-grow bg-[#f5dae8]"></div>
             </div>
             <h2 class="text-2xl text-gray-800 mb-8 font-bold">指导语</h2>
-            <div class="text-gray-600 leading-[2.1] mb-8 text-base text-justify">
+            <div class="instruction-copy text-gray-600 leading-[2.1] mb-8 text-base text-justify">
                 <p>我想邀请你做一次勇敢的停留。请回想一段曾在你生命中留下深重痕迹、甚至让你感到破碎的创伤事件。试着将它详细描述出来，不必在乎文采，也不必强求完整，只需诚实地让那些压抑已久的情绪流淌出来。我知道这或许并不容易，如果你感到疲惫，可以随时停下来，但请记得，此刻的你是安全的。你可以像整理旧物一样，将那些细碎的、沉重的、或难以言说的感受，一笔一画地交付给文字。</p>
             </div>
             <textarea id="trauma-text" class="w-full h-48 p-6 rounded-[2rem] border border-gray-200 focus:border-[#DE95BA] focus:ring-4 focus:ring-[#fff5f9] transition-all resize-none outline-none mb-8 text-gray-700 bg-[#fffcfb] bg-opacity-50 text-base font-medium" style="font-family: var(--font-family);" placeholder="在这里写下你的回忆或感受..."></textarea>
-            <div class="text-gray-500 text-sm mb-10 leading-relaxed text-justify">
+            <div class="instruction-note text-gray-500 text-sm mb-10 leading-relaxed text-justify">
                 接下来，请带着这段回忆，以当下最真实的感受进入测评，整个过程约需要5分钟，你准备好了吗？
             </div>
             <button onclick="startQuestions()" class="btn-primary text-white px-10 py-4 rounded-[1.25rem] text-base w-full sm:w-auto shadow-lg">我准备好了</button>
@@ -731,11 +878,8 @@
                 </div>
 
                 <!-- 反馈文案卡片 -->
-                <div class="p-10 bg-white rounded-[2.5rem] border border-white shadow-xl relative mb-12 text-justify">
-                     <div class="absolute top-6 left-6 text-[#fbe7f0] transform -scale-x-100 opacity-60">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017V14H15.017C13.3601 14 12.017 12.6569 12.017 11V5C12.017 3.34315 13.3601 2 15.017 2H21.017C22.6738 2 24.017 3.34315 24.017 5V11C24.017 12.6569 22.6738 14 21.017 14H21.017C21.017 16.2091 19.2261 18 17.017 18V21H14.017ZM2.01697 21L2.01697 18C2.01697 16.8954 2.91241 16 4.01697 16H7.01697V14H3.01697C1.36012 14 0.0169678 12.6569 0.0169678 11V5C0.0169678 3.34315 1.36012 2 3.01697 2H9.01697C10.6738 2 12.017 3.34315 12.017 5V11C12.017 12.6569 10.6738 14 9.01697 14H9.01697C9.01697 16.2091 7.22612 18 5.01697 18V21H2.01697Z"></path></svg>
-                     </div>
-                     <div id="conclusion-text" class="space-y-6 text-gray-700 font-normal"></div>
+                <div class="p-8 bg-white rounded-[2.5rem] border border-white shadow-xl relative mb-8 text-justify">
+                     <div id="conclusion-text" class="space-y-4 text-gray-700 font-normal"></div>
                 </div>
 
                 <div class="section-big-header">
@@ -744,16 +888,16 @@
                     <div class="header-line"></div>
                 </div>
 
-                <div class="space-y-16">
+                <div class="space-y-16 advice-content">
                     <div class="text-center italic text-gray-400 text-lg font-medium mb-12">“创伤不是你的错，但复原是你自己的责任。”</div>
 
                     <div id="report-details" class="space-y-16">
                         <!-- STEP 1 分类展示 -->
                         <section>
-                            <div class="step-title-wrapper"><span class="step-number-bg">01</span><h3 class="step-title-text">STEP 1：把迷雾中的怪兽一一命名</h3></div>
+                            <div class="step-title-wrapper"><span class="step-number-bg">01</span><h3 class="step-title-text">STEP 1: 把迷雾中的怪兽一一命名</h3></div>
                             <div class="step-intro-box text-justify">
-                                在进入具体的修复之前，我们必须先看清敌人的样子，也就是“识别怪兽”。那些你眼中的“性格缺陷”或“莫名情绪”，是你在恶劣环境下生长出的“生存盔甲”。<br><br>
-                                识别并命名这些怪兽是为了夺回控制权，是为了完成一次至关重要的转换：从“我很有问题”转变为“我经历过非常严重的事情”。<br><br>
+                                在进入具体的修复之前，我们必须先看清敌人的样子，也就是“识别怪兽”。那些你眼中的“性格缺陷”或“莫名情绪”，是你在恶劣环境下生长出的“生存盔甲”。<span class="para-gap"></span>
+                                识别并命名这些怪兽是为了夺回控制权，是为了完成一次至关重要的转换：从“我很有问题”转变为“我经历过非常严重的事情”。<span class="para-gap"></span>
                                 如下是你可能见到过的，一种或几种“怪兽”：
                             </div>
 
@@ -776,7 +920,7 @@
                                 <div class="content-card">
                                     <div class="card-number">03</div>
                                     <h4 class="font-bold text-gray-900 text-lg mb-2">强烈的孤独感和被抛弃感</h4>
-                                    <p class="text-gray-500 leading-relaxed text-xs text-justify">这是一种极度的孤独，仿佛被全世界所抛弃。这种感觉往往伴随着巨大的羞耻感，让你根据是因为自己太差劲才会被这样对待。</p>
+                                    <p class="text-gray-500 leading-relaxed text-xs text-justify">这是一种极度的孤独，仿佛被全世界所抛弃。这种感觉往往伴随着巨大的羞耻感，让你以为是因为自己太差劲才会被这样对待。</p>
                                 </div>
                                 <div class="content-card">
                                     <div class="card-number">04</div>
@@ -825,7 +969,7 @@
                                 <div class="content-card">
                                     <div class="card-number">10</div>
                                     <h4 class="font-bold text-gray-800 text-lg mb-2">触发“战或逃”反应</h4>
-                                    <p class="text-gray-500 text-xs leading-relaxed text-justify">某些看似无关的细节（一个眼神、一种气味）会瞬间激活大脑的杏尼核。即使环境安全，你的身体也会瞬间进入“战”或“逃”的状态，心跳加速，肌肉紧绷。长期创伤可能会迫使我们进化出特定的防御姿态。</p>
+                                    <p class="text-gray-500 text-xs leading-relaxed text-justify">某些看似无关的细节（一个眼神、一种气味）会瞬间激活大脑的杏仁核。即使环境安全，你的身体也会瞬间进入“战”或“逃”的状态，心跳加速，肌肉紧绷。长期创伤可能会迫使我们进化出特定的防御姿态。</p>
                                 </div>
                                 <div class="content-card">
                                     <div class="card-number">11</div>
@@ -842,10 +986,10 @@
 
                         <!-- STEP 2 完整内容 -->
                         <section>
-                            <div class="step-title-wrapper"><span class="step-number-bg">02</span><h3 class="step-title-text">STEP 2：我们可以通过这些路径来滋养自己</h3></div>
+                            <div class="step-title-wrapper"><span class="step-number-bg">02</span><h3 class="step-title-text">STEP 2: 我们可以通过这些路径来滋养自己</h3></div>
                             <div class="step-intro-box text-justify">
-                                第一步是“识别怪兽”，第二步来“重建家园”。<br><br>
-                                你不需要再为了生存戴着沉重盔甲疲于奔命，学着把自己当成植物来养。就像一棵受过伤的树，它需要阳光（认知）、水分（情绪）、土壤的稳固（身体）以及生命的意义（灵性）。<br><br>
+                                第一步是“识别怪兽”，第二步来“重建家园”。<span class="para-gap"></span>
+                                你不需要再为了生存戴着沉重盔甲疲于奔命，学着把自己当成植物来养。就像一棵受过伤的树，它需要阳光（认知）、水分（情绪）、土壤的稳固（身体）以及生命的意义（灵性）。<span class="para-gap"></span>
                                 疗愈不是一场线性的攀爬，而是一场多维度的复苏，你可以先选择那个“此时此刻”最需要的方式，一点点地重新养护自己、观照自己。
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
@@ -877,17 +1021,17 @@
             <!-- 被包裹的导出区域结束 -->
 
             <!-- STEP 3 保持在导出区域外 -->
-            <section class="pb-8 mt-16">
-                <div class="step-title-wrapper"><span class="step-number-bg">03</span><h3 class="step-title-text">STEP 3：更多疗愈的进程与细节</h3></div>
+            <section class="pb-8 mt-16 advice-content">
+                <div class="step-title-wrapper"><span class="step-number-bg">03</span><h3 class="step-title-text">STEP 3: 更多疗愈的进程与细节</h3></div>
                 <div class="step-intro-box text-justify">
-                    我们完成了第一步“识别怪兽”，第二步“重建家园”，你可能想知道更多具体的步骤，那么第三步就是给自己“挑选一些心理急救工具”。<br><br>
+                    我们完成了第一步“识别怪兽”，第二步“重建家园”，你可能想知道更多具体的步骤，那么第三步就是给自己“挑选一些心理急救工具”。<span class="para-gap"></span>
                     疗愈很难一蹴而就，它需要你在无数个细微的瞬间里，选择不再对自己施暴。希望以下这些步骤和工具可以在你难过时稳稳接住你，能够让你从深渊爬出来的时候有一个好用的、适合你的梯子。让你平安降落、走回岸边。
                 </div>
                 
                 <div class="lock-card-compact">
-                    <div class="w-14 h-14 bg-[#fff9f5] rounded-full flex items-center justify-center mb-6 text-[#DE95BA] shadow-sm"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg></div>
+
                     <h4 class="text-2xl font-black text-gray-900 mb-2 text-center">解锁自我疗愈指南</h4>
-                    <p class="text-gray-500 text-sm mb-8 text-center leading-relaxed px-4">本指南旨在为正在经历CPTSD症状（如情绪闪回、批判声音、抑郁感）的人士提供即时的心理学工具，成为你的“安全地图”</p>
+                    <p class="text-gray-500 text-sm mb-6 text-center leading-relaxed px-4">本指南旨在为正在经历CPTSD症状（如情绪闪回、批判声音、抑郁感）的人士提供即时的心理学工具</p>
                     <button type="button" onclick="startPayment()" class="btn-unlock group font-black px-12 py-3.5 bg-gradient-to-r from-[#DE95BA] to-[#f1b2d3] text-white rounded-xl shadow-lg">
                         点击立即解锁
                         <span class="btn-note">（需移动端购买）</span>
@@ -904,14 +1048,14 @@
             </section>
 
             <!-- 重新设计的底部操作栏 -->
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-10 border-t border-gray-100 mb-10 px-2">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6 border-t border-gray-100 mb-6 px-2">
                 <button onclick="location.reload()" class="btn-action-outline w-full sm:w-auto justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     RESTART JOURNEY · 重新测评
                 </button>
                 <button onclick="downloadReport(event)" class="btn-action-solid w-full sm:w-auto justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    GENERATE REPORT · 生成报告长图
+                    GENERATE REPORT · 生成报告
                 </button>
             </div>
         </div>
@@ -967,13 +1111,15 @@
             }
         }
 
-        function updateQuestion() {
+        function updateQuestion(forceClear = false) {
             const currentIdxElem = document.getElementById('current-q-index');
             currentIdxElem.innerText = currentStep + 1;
             document.getElementById('question-title').innerText = questions[currentStep];
             document.querySelectorAll('.option-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if (scores[currentStep] !== null && parseInt(btn.dataset.value) === scores[currentStep]) btn.classList.add('active');
+                if (!forceClear && scores[currentStep] !== null && parseInt(btn.dataset.value) === scores[currentStep]) {
+                    btn.classList.add('active');
+                }
             });
             const footprints = document.querySelectorAll('.footprint-item');
             footprints.forEach((fp, idx) => { if (idx <= currentStep) fp.classList.add('active'); else fp.classList.remove('active'); });
@@ -982,10 +1128,20 @@
 
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.addEventListener('click', function() {
+                const value = parseInt(this.dataset.value);
+                scores[currentStep] = value;
                 document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                scores[currentStep] = parseInt(this.dataset.value);
-                setTimeout(() => { if (currentStep < 17) { currentStep++; updateQuestion(); } else { generateReport(); } }, 300);
+                this.blur();
+                setTimeout(() => {
+                    if (currentStep < 17) {
+                        currentStep++;
+                        updateQuestion(true);
+                        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+                    } else {
+                        generateReport();
+                    }
+                }, 300);
             });
         });
 
@@ -1070,24 +1226,24 @@
                         borderColor: '#DE95BA',
                         pointBackgroundColor: '#DE95BA',
                         borderWidth: 3,
-                        pointRadius: 1.6, 
-                        pointHoverRadius: 3 
+                        pointRadius: 2.5, 
+                        pointHoverRadius: 4 
                     }]
                 },
                 options: {
-                    layout: { padding: { top: 30, bottom: 30, left: 60, right: 60 } },
+                    layout: { padding: isMobile ? { top: 6, bottom: 6, left: 22, right: 22 } : { top: 9, bottom: 9, left: 32, right: 32 } },
                     scales: { 
                         r: { 
                             beginAtZero: true, max: 100, ticks: { display: false },
                             pointLabels: { 
-                                font: { family: "'Noto Serif SC'", size: isMobile ? 12 : 15, weight: '700' }, 
+                                font: { family: "'Noto Serif SC'", size: isMobile ? 11 : 15, weight: '700' }, 
                                 color: (context) => (context.index === hoveredLabelIndex ? '#DE95BA' : '#718096'),
-                                padding: isMobile ? 10 : 15,
-                                showBackdrop: isMobile ? false : true,
+                                padding: isMobile ? 4 : 15,
+                                showBackdrop: true,
                                 backdropColor: (context) => (context.index === hoveredLabelIndex ? '#fff9f5' : '#FFFFFF'),
-                                borderRadius: isMobile ? 8 : 12,
-                                backdropPadding: isMobile ? { x: 10, y: 8 } : { x: 16, y: 12 },
-                                borderWidth: isMobile ? 0 : 1,
+                                borderRadius: 12,
+                                backdropPadding: { x: 8, y: 6 },
+                                borderWidth: 1,
                                 borderColor: (context) => (context.index === hoveredLabelIndex ? '#DE95BA' : '#e2e8f0')
                             },
                             grid: { color: 'rgba(0,0,0,0.05)' }, angleLines: { color: 'rgba(0,0,0,0.05)' }
@@ -1099,13 +1255,11 @@
                         const centerX = (radarChart.chartArea.left + radarChart.chartArea.right) / 2;
                         const centerY = (radarChart.chartArea.top + radarChart.chartArea.bottom) / 2;
                         const dist = Math.sqrt(Math.pow(event.x - centerX, 2) + Math.pow(event.y - centerY, 2));
-                        const inner = isMobile ? 75 : 85;
-                        const outer = isMobile ? 200 : 240;
-                        if (dist > inner && dist < outer) {
+                        if (dist > 85 && dist < 240) {
                             let angle = Math.atan2(event.y - centerY, event.x - centerX) * 180 / Math.PI + 90;
                             if (angle < 0) angle += 360;
                             const idx = Math.round(angle / 60) % 6;
-                            if (hoveredLabelIndex !== idx) { hoveredLabelIndex = idx; canvas.style.cursor = 'pointer'; }
+                            if (hoveredLabelIndex !== idx) { hoveredLabelIndex = idx; canvas.style.cursor = 'pointer'; radarChart.update('none'); }
                         } else if (hoveredLabelIndex !== -1) { hoveredLabelIndex = -1; canvas.style.cursor = 'default'; radarChart.update('none'); }
                     },
                     onClick: (e) => {
@@ -1143,60 +1297,44 @@
             const captureArea = document.getElementById('report-capture-area');
             const btn = event.currentTarget;
             const originalHTML = btn.innerHTML;
+            const originalWidth = captureArea.style.width;
+            const originalMaxWidth = captureArea.style.maxWidth;
+            const root = document.documentElement;
             
             btn.innerHTML = '正在生成图片...';
             btn.disabled = true;
 
             try {
-                await (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve());
-                await new Promise(r => setTimeout(r, 50));
-                const isIOS = /iP(hone|od|ad)/.test(navigator.platform) || /iPhone|iPad|iPod/.test(navigator.userAgent);
-                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                const needOpen = isIOS && isSafari;
-                const preWindow = needOpen ? window.open('about:blank') : null;
-                const isMobile = window.innerWidth <= 640;
-                const scale = isMobile ? 1 : Math.min(2, window.devicePixelRatio || 1);
-                captureArea.classList.add('capture-mode');
+                // 导出时保持当前设备的排版样式（与用户看到的一致）
+                await new Promise(requestAnimationFrame);
+
+                // 使用 html2canvas 渲染指定区域
                 const canvas = await html2canvas(captureArea, {
-                    scale: scale,
-                    useCORS: true,
-                    allowTaint: true,
+                    scale: 2, // 提高清晰度
+                    useCORS: true, // 允许跨域字体/图片
                     backgroundColor: '#ffffff',
                     logging: false,
                     onclone: (documentClone) => {
+                        // 在克隆出的DOM中确保没有遮罩层
                         const explainer = documentClone.getElementById('floating-explainer');
                         if (explainer) explainer.style.display = 'none';
                         const chartBox = documentClone.getElementById('radar-chart-box');
                         if (chartBox) chartBox.style.opacity = '1';
-                        const clonedCapture = documentClone.getElementById('report-capture-area');
-                        if (clonedCapture) clonedCapture.classList.add('capture-mode');
+                        // 克隆中不做强制宽度或样式覆盖，保持当前设备排版
                     }
                 });
 
                 // 转换为图片并下载
                 const image = canvas.toDataURL("image/png");
-                if (needOpen) {
-                    if (preWindow) { preWindow.location.href = image; preWindow.focus(); }
-                    else { window.open(image, '_blank'); }
-                } else {
-                    const link = document.createElement('a');
-                    link.download = `溯源之旅测评报告_${new Date().toLocaleDateString()}.png`;
-                    link.href = image;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }
+                const link = document.createElement('a');
+                link.download = `溯源之旅测评报告_${new Date().toLocaleDateString()}.png`;
+                link.href = image;
+                link.click();
             } catch (err) {
                 console.error("生成图片失败:", err);
-                try {
-                    const captureCanvas = await html2canvas(captureArea, { scale: 1, useCORS: true, allowTaint: true, backgroundColor: '#ffffff', logging: false });
-                    const fallbackImg = captureCanvas.toDataURL("image/png");
-                    const preWindow = window.open('about:blank');
-                    if (preWindow) { preWindow.location.href = fallbackImg; preWindow.focus(); }
-                    else { window.open(fallbackImg, '_blank'); }
-                } catch (_) {}
             } finally {
-                captureArea.classList.remove('capture-mode');
+                captureArea.style.width = originalWidth;
+                captureArea.style.maxWidth = originalMaxWidth;
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
             }
