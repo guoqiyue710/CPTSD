@@ -1053,7 +1053,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     RESTART JOURNEY · 重新测评
                 </button>
-                <button onclick="downloadReport(event)" class="btn-action-solid w-full sm:w-auto justify-center">
+                <button onclick="downloadReport(this)" class="btn-action-solid w-full sm:w-auto justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     GENERATE REPORT · 生成报告
                 </button>
@@ -1293,9 +1293,14 @@
         }
 
         // 下载报告图片功能
-        async function downloadReport(event) {
+        async function downloadReport(btnOrEvent) {
             const captureArea = document.getElementById('report-capture-area');
-            const btn = event.currentTarget;
+            const btn = (btnOrEvent && btnOrEvent.currentTarget) ? btnOrEvent.currentTarget : btnOrEvent;
+            if (!captureArea || !btn) return;
+            if (typeof html2canvas !== 'function') {
+                alert('生成图片组件未加载，请刷新页面后重试');
+                return;
+            }
             const originalHTML = btn.innerHTML;
             const originalWidth = captureArea.style.width;
             const originalMaxWidth = captureArea.style.maxWidth;
@@ -1326,10 +1331,22 @@
 
                 // 转换为图片并下载
                 const image = canvas.toDataURL("image/png");
-                const link = document.createElement('a');
-                link.download = `溯源之旅测评报告_${new Date().toLocaleDateString()}.png`;
-                link.href = image;
-                link.click();
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    const win = window.open();
+                    if (win) {
+                        win.document.write(`<img src="${image}" style="width:100%;height:auto;" />`);
+                    } else {
+                        window.location.href = image;
+                    }
+                } else {
+                    const link = document.createElement('a');
+                    link.download = `溯源之旅测评报告_${new Date().toLocaleDateString()}.png`;
+                    link.href = image;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                }
             } catch (err) {
                 console.error("生成图片失败:", err);
             } finally {
