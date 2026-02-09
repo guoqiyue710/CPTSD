@@ -1330,22 +1330,39 @@
                 });
 
                 // 转换为图片并下载
-                const image = canvas.toDataURL("image/png");
                 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                if (isIOS) {
-                    const win = window.open();
-                    if (win) {
-                        win.document.write(`<img src="${image}" style="width:100%;height:auto;" />`);
+                const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+                if (blob) {
+                    const url = URL.createObjectURL(blob);
+                    if (isIOS) {
+                        const win = window.open(url, '_blank');
+                        if (!win) window.location.href = url;
                     } else {
-                        window.location.href = image;
+                        const link = document.createElement('a');
+                        link.download = `溯源之旅测评报告_${new Date().toLocaleDateString()}.png`;
+                        link.href = url;
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
                     }
+                    setTimeout(() => URL.revokeObjectURL(url), 10000);
                 } else {
-                    const link = document.createElement('a');
-                    link.download = `溯源之旅测评报告_${new Date().toLocaleDateString()}.png`;
-                    link.href = image;
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
+                    const image = canvas.toDataURL("image/png");
+                    if (isIOS) {
+                        const win = window.open();
+                        if (win) {
+                            win.document.write(`<img src="${image}" style="width:100%;height:auto;" />`);
+                        } else {
+                            window.location.href = image;
+                        }
+                    } else {
+                        const link = document.createElement('a');
+                        link.download = `溯源之旅测评报告_${new Date().toLocaleDateString()}.png`;
+                        link.href = image;
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                    }
                 }
             } catch (err) {
                 console.error("生成图片失败:", err);
