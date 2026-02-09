@@ -1061,14 +1061,10 @@
             </section>
 
             <!-- 重新设计的底部操作栏 -->
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6 border-t border-gray-100 mb-6 px-2">
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-3 pt-6 border-t border-gray-100 mb-6 px-2">
                 <button onclick="location.reload()" class="btn-action-outline w-full sm:w-auto justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     RESTART JOURNEY · 重新测评
-                </button>
-                <button onclick="downloadReport(event)" class="btn-action-solid w-full sm:w-auto justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    GENERATE REPORT · 生成报告
                 </button>
             </div>
         </div>
@@ -1305,84 +1301,6 @@
             radarChart.update('none');
         }
 
-        // 下载报告图片功能
-        async function downloadReport(event) {
-            const captureArea = document.getElementById('report-capture-area');
-            const btn = event.currentTarget;
-            const originalHTML = btn.innerHTML;
-            const originalWidth = captureArea.style.width;
-            const originalMaxWidth = captureArea.style.maxWidth;
-            const originalHeight = captureArea.style.height;
-            const originalOverflow = captureArea.style.overflow;
-            const root = document.documentElement;
-            const ua = navigator.userAgent || '';
-            const isWeChat = /MicroMessenger/i.test(ua);
-            
-            btn.innerHTML = '正在生成图片...';
-            btn.disabled = true;
-
-            try {
-                if (document.fonts && document.fonts.ready) {
-                    await document.fonts.ready;
-                }
-                // 导出时保持当前设备的排版样式（与用户看到的一致）
-                await new Promise(requestAnimationFrame);
-                const captureWidth = Math.ceil(captureArea.scrollWidth);
-                const captureHeight = Math.ceil(captureArea.scrollHeight);
-                // 微信对超长图片支持有限，动态降低 scale 以避免被截断
-                const maxSide = isWeChat ? 4096 : 8192;
-                const maxDim = Math.max(captureWidth, captureHeight);
-                let scale = Math.min(2, maxSide / maxDim);
-                if (!isFinite(scale) || scale <= 0) scale = 1;
-
-                captureArea.style.height = `${captureHeight}px`;
-                captureArea.style.overflow = 'visible';
-
-                // 使用 html2canvas 渲染指定区域
-                const canvas = await html2canvas(captureArea, {
-                    scale, // 提高清晰度（长图会自动降低）
-                    useCORS: true, // 允许跨域字体/图片
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    width: captureWidth,
-                    height: captureHeight,
-                    windowWidth: captureWidth,
-                    windowHeight: captureHeight,
-                    scrollX: -window.scrollX,
-                    scrollY: -window.scrollY,
-                    onclone: (documentClone) => {
-                        // 在克隆出的DOM中确保没有遮罩层
-                        const explainer = documentClone.getElementById('floating-explainer');
-                        if (explainer) explainer.style.display = 'none';
-                        const chartBox = documentClone.getElementById('radar-chart-box');
-                        if (chartBox) chartBox.style.opacity = '1';
-                        const cloneCapture = documentClone.getElementById('report-capture-area');
-                        if (cloneCapture) {
-                            cloneCapture.style.height = `${captureHeight}px`;
-                            cloneCapture.style.overflow = 'visible';
-                        }
-                        // 克隆中不做强制宽度或样式覆盖，保持当前设备排版
-                    }
-                });
-
-                // 转换为图片并下载
-                const image = canvas.toDataURL("image/png");
-                const link = document.createElement('a');
-                link.download = `溯源之旅测评报告_${new Date().toLocaleDateString()}.png`;
-                link.href = image;
-                link.click();
-            } catch (err) {
-                console.error("生成图片失败:", err);
-            } finally {
-                captureArea.style.width = originalWidth;
-                captureArea.style.maxWidth = originalMaxWidth;
-                captureArea.style.height = originalHeight;
-                captureArea.style.overflow = originalOverflow;
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-            }
-        }
-        
         function openWechat() { document.getElementById('wechat-modal').classList.remove('hidden'); }
         function closeWechat() { document.getElementById('wechat-modal').classList.add('hidden'); }
         
