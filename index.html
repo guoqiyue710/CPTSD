@@ -1301,6 +1301,8 @@
             const originalWidth = captureArea.style.width;
             const originalMaxWidth = captureArea.style.maxWidth;
             const root = document.documentElement;
+            const ua = navigator.userAgent || '';
+            const isWeChat = /MicroMessenger/i.test(ua);
             
             btn.innerHTML = '正在生成图片...';
             btn.disabled = true;
@@ -1308,13 +1310,22 @@
             try {
                 // 导出时保持当前设备的排版样式（与用户看到的一致）
                 await new Promise(requestAnimationFrame);
+                const captureWidth = Math.ceil(captureArea.scrollWidth);
+                const captureHeight = Math.ceil(captureArea.scrollHeight);
+                // 微信对超长图片支持有限，动态降低 scale 以避免被截断
+                const maxSide = isWeChat ? 4096 : 8192;
+                const maxDim = Math.max(captureWidth, captureHeight);
+                let scale = Math.min(2, maxSide / maxDim);
+                if (!isFinite(scale) || scale <= 0) scale = 1;
 
                 // 使用 html2canvas 渲染指定区域
                 const canvas = await html2canvas(captureArea, {
-                    scale: 2, // 提高清晰度
+                    scale, // 提高清晰度（长图会自动降低）
                     useCORS: true, // 允许跨域字体/图片
                     backgroundColor: '#ffffff',
                     logging: false,
+                    width: captureWidth,
+                    height: captureHeight,
                     onclone: (documentClone) => {
                         // 在克隆出的DOM中确保没有遮罩层
                         const explainer = documentClone.getElementById('floating-explainer');
