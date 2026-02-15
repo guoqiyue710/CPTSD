@@ -102,7 +102,7 @@
         #page-question .mb-12 { margin-bottom: 1rem; }
         #page-question .mb-8 { margin-bottom: 1rem; }
 
-        /* 发展建议之后文字风格（参考第一页，整体略缩小） */
+        /* 疗愈过程之后文字风格（参考第一页，整体略缩小） */
         #page-report .advice-content { color: #4a5568; }
         #page-report .advice-content p:not(.text-xs):not(.text-sm):not(.text-[12px]) {
             font-size: 0.84rem;
@@ -802,7 +802,7 @@
             <!-- 第一页最下方的文本 -->
                 <div class="home-footnote mt-16 pt-8 border-t border-gray-100 text-[12px] text-gray-400 text-justify leading-6 font-light">
                 <p>本测评基于ICD-11国际诊断标准，结合了国际创伤问卷（ITQ） 量表设计进行开发，结果仅供自我探索与参考，不作为医学诊断依据。如需确诊或进行针对性治疗，请寻求精神科医生或临床心理学专家的专业帮助。</p>
-                <p class="mt-3">发展建议部分主要参考皮特·沃克（Pete Walker）的著作——《不原谅也没关系》（Complex PTSD: From Surviving to Thriving）。</p>
+                <p class="mt-3">疗愈过程部分主要参考皮特·沃克（Pete Walker）的著作——《不原谅也没关系》（Complex PTSD: From Surviving to Thriving）。</p>
             </div>
         </div>
 
@@ -897,7 +897,7 @@
 
                 <div class="section-big-header">
                     <div class="header-line"></div>
-                    <div class="header-tag">发展建议</div>
+                    <div class="header-tag">疗愈过程</div>
                     <div class="header-line"></div>
                 </div>
 
@@ -1062,7 +1062,7 @@
 
             <!-- 重新设计的底部操作栏 -->
             <div class="flex flex-col sm:flex-row justify-center items-center gap-3 pt-6 border-t border-gray-100 mb-6 px-2">
-                <button onclick="location.reload()" class="btn-action-outline w-full sm:w-auto justify-center">
+                <button onclick="restartJourney()" class="btn-action-outline w-full sm:w-auto justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     RESTART JOURNEY · 重新测评
                 </button>
@@ -1096,8 +1096,92 @@
         }
 
         // 兑换码校验相关（每次打开都需输入，不持久化）
+        const REDEEM_KEYS = {
+            pool: 'redeemCodePool',
+            used: 'redeemCodeUsed',
+            restart: 'redeemRestartCounts'
+        };
+        const SEED_VERSION = '2026-02-15-001';
+        const SUPER_CODE = 'INLIGHT';
+        const RESTART_LIMIT = 3;
+        const CURRENT_CODE_KEY = 'currentRedeemCode';
+        const LAST_PAGE_KEY = 'lastPageId';
+        const PRELOADED_CODES = [
+            'Q9J4T7K2M8','X7P3N9R5C2','L6H2V9D8F3','M8C5R7G2W9','T3K8Y6P4N7',
+            'H9Q2M7X5L8','V4D9C2T7J6','N7W3K8Q5P2','R5M9H2X7C4','J6T3V8L5Y9',
+            'P2X7N4Q9K6','C8R5T2M7H9','G4L9J6P2X7','K7Y3C8V5M2','D9H4Q7T2R6',
+            'X5N8P3L9C2','M2K7R4H9V5','T8C2Y7G4Q9','J3P6X9N5L8','V9M4H2K7R3',
+            'Q7T2C8X5N4','L8J3P6V9M2','R2N7H4Q9T5','K9V2M7C4X8','D4P9Y3T7J2',
+            'X2H8Q5L9R4','M7C2T9N5K3','T5P8J2X7V9','H2R6M9Q4C8','N9K3V7L2P5',
+            'R7T4X9H2M6','J2C8Q5P9N7','P9L4R2T7K3','C5M8H3X9V2','G9Q2N7C4T5',
+            'K4Y8P2L9R6','D2T7M4J8X9','X9V3C6Q2H7','M4K9R2P7T5','T2J6H9N4C8',
+            'H7Q3X8M2P9','V2C9T5K7R4','N4L8P2Y9J6','R9M2H7C5Q3','J8T4V2X9L5',
+            'P3X9N6K2C8','C2R7T4M9H5','G8L2J9P5X3','K3Y9C6V2M8','D7H2Q9T5R4',
+            'X4N9P2L7C5','M9K4R7H2V6','T7C3Y8G2Q9','J4P8X2N9L6','V6M2H9K4R7',
+            'Q3T8C2X9N5','L2J7P4V9M8','R6N2H9Q3T7','K8V4M2C9X5','D3P9Y2T7J6',
+            'X8H4Q7L2R9','M6C2T9N4K7','T9P3J7X2V5','H4R8M2Q9C6','N2K9V3L7P4',
+            'R4T9X2H7M5','J9C2Q8P4N7','P7L2R9T5K3','C9M4H2X8V7','G2Q7N4C9T3',
+            'K5Y2P9L4R8','D8T3M7J2X9','X3V9C2Q7H4','M2K8R5P9T6','T4J9H2N7C5',
+            'H8Q2X7M4P9','V5C9T2K8R3','N7L4P9Y2J6','R2M8H5C9Q7','J7T2V9X4L8',
+            'P4X8N2K7C9','C7R2T9M4H5','G5L9J2P8X3','K2Y7C4V9M6','D9H2Q8T5R3'
+        ];
         let unlocked = false;
+        let currentRedeemCode = '';
         function isUnlocked() { return unlocked === true; }
+        function normalizeCode(code) { return (code || '').trim().toUpperCase(); }
+        function safeParse(json, fallback) {
+            try { return JSON.parse(json); } catch (e) { return fallback; }
+        }
+        function loadSet(key) {
+            const data = safeParse(localStorage.getItem(key), []);
+            return new Set(Array.isArray(data) ? data : []);
+        }
+        function saveSet(key, set) { localStorage.setItem(key, JSON.stringify(Array.from(set))); }
+        function loadMap(key) {
+            const data = safeParse(localStorage.getItem(key), {});
+            return (data && typeof data === 'object') ? data : {};
+        }
+        function saveMap(key, map) { localStorage.setItem(key, JSON.stringify(map)); }
+        function generateCode(length = 10) {
+            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+            let out = '';
+            if (window.crypto && window.crypto.getRandomValues) {
+                const buf = new Uint8Array(length);
+                window.crypto.getRandomValues(buf);
+                for (let i = 0; i < length; i++) out += chars[buf[i] % chars.length];
+            } else {
+                for (let i = 0; i < length; i++) out += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return out;
+        }
+        function addRedeemCodeToPool(code) {
+            const pool = loadSet(REDEEM_KEYS.pool);
+            pool.add(code);
+            saveSet(REDEEM_KEYS.pool, pool);
+        }
+        function isCodeInPool(code) {
+            const pool = loadSet(REDEEM_KEYS.pool);
+            return pool.has(code);
+        }
+        function markCodeUsed(code) {
+            const used = loadSet(REDEEM_KEYS.used);
+            used.add(code);
+            saveSet(REDEEM_KEYS.used, used);
+        }
+        function isCodeUsed(code) {
+            const used = loadSet(REDEEM_KEYS.used);
+            return used.has(code);
+        }
+        function getRemainingRestarts(code) {
+            const map = loadMap(REDEEM_KEYS.restart);
+            if (typeof map[code] !== 'number') map[code] = RESTART_LIMIT;
+            return map[code];
+        }
+        function setRemainingRestarts(code, value) {
+            const map = loadMap(REDEEM_KEYS.restart);
+            map[code] = value;
+            saveMap(REDEEM_KEYS.restart, map);
+        }
         function showRedeem() {
             const ov = document.getElementById('redeem-overlay');
             if (ov) { ov.style.display = 'flex'; }
@@ -1107,7 +1191,34 @@
         function hideRedeem() { const ov = document.getElementById('redeem-overlay'); if (ov) ov.style.display = 'none'; }
         function requireUnlock() { if (!isUnlocked()) { showRedeem(); return false; } return true; }
 
+        function seedRedeemPool() {
+            const pool = loadSet(REDEEM_KEYS.pool);
+            PRELOADED_CODES.forEach(code => pool.add(code));
+            saveSet(REDEEM_KEYS.pool, pool);
+            localStorage.setItem('redeemSeedVersion', SEED_VERSION);
+        }
         function startQuestions() { if (!requireUnlock()) return; nextPage('page-question'); initFootprints(); updateQuestion(); }
+        function restartJourney() {
+            if (!currentRedeemCode) { showRedeem(); return; }
+            if (currentRedeemCode === SUPER_CODE) {
+                location.reload();
+                return;
+            }
+            const remaining = getRemainingRestarts(currentRedeemCode);
+            if (remaining <= 1) {
+                setRemainingRestarts(currentRedeemCode, 0);
+                alert('您的测评次数已用完，如仍有需要请联系「悦见InLight」');
+                unlocked = false;
+                currentRedeemCode = '';
+                localStorage.removeItem(CURRENT_CODE_KEY);
+                return;
+            }
+            const nextRemaining = remaining - 1;
+            const ok = confirm(`剩余重新测评次数：${nextRemaining} 次，是否确认重新测评？`);
+            if (!ok) return;
+            setRemainingRestarts(currentRedeemCode, nextRemaining);
+            location.reload();
+        }
 
         function initFootprints() {
             const container = document.getElementById('footprint-container');
@@ -1156,19 +1267,60 @@
 
         // 页面加载时显示兑换码并绑定提交
         document.addEventListener('DOMContentLoaded', () => {
-            showRedeem();
             const $submit = document.getElementById('redeem-submit');
             const $input = document.getElementById('redeem-input');
             const $error = document.getElementById('redeem-error');
-            function tryUnlock() {
-                const val = ($input && $input.value ? $input.value : '').trim().toLowerCase();
-                if (val === 'inlight') {
+            if (localStorage.getItem('redeemSeedVersion') !== SEED_VERSION) seedRedeemPool();
+            const savedCode = normalizeCode(localStorage.getItem(CURRENT_CODE_KEY) || '');
+            if (savedCode) {
+                if (savedCode === SUPER_CODE) {
+                    localStorage.removeItem(CURRENT_CODE_KEY);
+                    showRedeem();
+                } else if (savedCode !== SUPER_CODE && getRemainingRestarts(savedCode) <= 0) {
+                    unlocked = false;
+                    currentRedeemCode = '';
+                    localStorage.removeItem(CURRENT_CODE_KEY);
+                    showRedeem();
+                    if ($error) $error.textContent = '您的测评次数已用完，如仍有需要请联系「悦见InLight」';
+                } else {
                     unlocked = true;
+                    currentRedeemCode = savedCode;
                     hideRedeem();
                     nextPage('page-home');
-                } else if ($error) {
-                    $error.textContent = '兑换码错误，请重试';
                 }
+            } else {
+                showRedeem();
+            }
+            function tryUnlock() {
+                const val = normalizeCode($input && $input.value ? $input.value : '');
+                if (val === SUPER_CODE) {
+                    unlocked = true;
+                    currentRedeemCode = SUPER_CODE;
+                    hideRedeem();
+                    nextPage('page-home');
+                    return;
+                }
+                if (!val) {
+                    if ($error) $error.textContent = '请输入兑换码';
+                    return;
+                }
+                if (!isCodeInPool(val)) {
+                    if ($error) $error.textContent = '兑换码无效，请重试';
+                    return;
+                }
+                if (isCodeUsed(val)) {
+                    if ($error) $error.textContent = '兑换码已使用，无法再次测评';
+                    return;
+                }
+                markCodeUsed(val);
+                if (getRemainingRestarts(val) === RESTART_LIMIT) {
+                    setRemainingRestarts(val, RESTART_LIMIT);
+                }
+                unlocked = true;
+                currentRedeemCode = val;
+                localStorage.setItem(CURRENT_CODE_KEY, val);
+                hideRedeem();
+                nextPage('page-home');
             }
             if ($submit) $submit.addEventListener('click', tryUnlock);
             if ($input) $input.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
@@ -1219,6 +1371,7 @@
                 );
             }
             nextPage('page-report');
+            localStorage.setItem(LAST_PAGE_KEY, 'page-report');
         }
 
         function renderRadar(data) {
