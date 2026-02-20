@@ -1092,7 +1092,7 @@
                     redeemCode: currentRedeemCode,
                     totalScore,
                     dimensionScores: dims,
-                    answers: questions.map((q, idx) => ({ question: q, score: scores[idx] })),
+                    answers: questions.map((_, idx) => ({ question: `Q${idx + 1}`, score: scores[idx] })),
                     clientTime: new Date().toISOString()
                 };
                 fetch(REPORT_API, {
